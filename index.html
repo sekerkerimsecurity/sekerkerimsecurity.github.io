@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Özel Güvenlik Online Test Sistemi</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#e5e7eb;
+}
+header{
+  padding:20px;
+  text-align:center;
+  background:#020617;
+  border-bottom:1px solid #1e293b;
+}
+header h1{margin:0;font-size:22px}
+header p{margin:5px 0 0;font-size:14px;opacity:.8}
+
+main{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:600;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:white;
+  margin-top:10px;
+}
+.btn.secondary{
+  background:linear-gradient(135deg,#334155,#1e293b);
+}
+.option{
+  display:block;
+  background:#0f172a;
+  padding:12px;
+  border-radius:10px;
+  margin:10px 0;
+  cursor:pointer;
+  border:1px solid #1e293b;
+}
+.option input{margin-right:8px}
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:13px;
+  opacity:.75;
+}
+footer a{color:#60a5fa;text-decoration:none}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#1e293b;
+  font-size:12px;
+  margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Özel Güvenlik Çıkmış Soru Testleri</h1>
+<p>Silahlı & Silahsız – Mobil / iOS / PC Uyumlu</p>
+</header>
+
+<main id="app"></main>
+
+<footer>
+<div>Siteyi tasarlayan: <b>Kenan Komutanın öğrencisi – şekerkerimsecurity</b></div>
+<div>Instagram: <a href="https://instagram.com/kerimm.b" target="_blank">@kerimm.b</a></div>
+</footer>
+
+<script>
+const randomNames=[
+"Ahmet K.","Mehmet Y.","Ali D.","Burak T.","Serkan A.",
+"Murat Ç.","Emre S.","Furkan G.","Onur P.","Hakan Z."
+];
+
+const silahsız = Array.from({length:100},(_,i)=>({
+q:`${i+1}) Özel güvenlik görevlisinin görev alanıyla ilgili aşağıdakilerden hangisi doğrudur?`,
+o:[
+"Görev alanı dışında yetkisi vardır",
+"Sadece görev alanı içinde yetkilidir",
+"İl sınırlarında yetkilidir",
+"Türkiye genelinde yetkilidir"
+],
+a:1
+}));
+
+const silahlı = Array.from({length:100},(_,i)=>({
+q:`${i+1}) Ateşli silahlarla ilgili aşağıdaki ifadelerden hangisi doğrudur?`,
+o:[
+"Silah dolu halde bırakılabilir",
+"Emniyet kurallarına uyulmalıdır",
+"Şarjörsüz silah tehlikesizdir",
+"Tetik sürekli basılı tutulur"
+],
+a:1
+}));
+
+let currentTest=[],index=0,correct=0;
+
+function home(){
+document.getElementById("app").innerHTML=`
+<div class="card">
+<span class="badge">Test Seçimi</span>
+<h3>Hangi testi çözmek istiyorsunuz?</h3>
+<button class="btn" onclick="startTest('silahsız')">Silahsız Test (100 Soru)</button>
+<button class="btn secondary" onclick="startTest('silahlı')">Silahlı Test (100 Soru)</button>
+</div>`;
+}
+
+function startTest(type){
+currentTest = type==="silahsız" ? silahsız : silahlı;
+index=0; correct=0;
+nextQuestion();
+}
+
+function nextQuestion(){
+if(index>=currentTest.length){
+let name=randomNames[Math.floor(Math.random()*randomNames.length)];
+let wrong=currentTest.length-correct;
+document.getElementById("app").innerHTML=`
+<div class="card">
+<span class="badge">Sonuç</span>
+<h3>${name}</h3>
+<p><b>${correct}</b> Doğru / <b>${wrong}</b> Yanlış</p>
+<button class="btn" onclick="home()">Ana Menü</button>
+</div>`;
+return;
+}
+let q=currentTest[index];
+document.getElementById("app").innerHTML=`
+<div class="card">
+<span class="badge">Soru ${index+1} / ${currentTest.length}</span>
+<h4>${q.q}</h4>
+${q.o.map((x,i)=>`
+<label class="option">
+<input type="radio" name="opt" value="${i}">${x}
+</label>`).join("")}
+<button class="btn" onclick="check()">Sonraki</button>
+</div>`;
+}
+
+function check(){
+let s=document.querySelector('input[name="opt"]:checked');
+if(!s) return;
+if(Number(s.value)===currentTest[index].a) correct++;
+index++;
+nextQuestion();
+}
+
+home();
+</script>
+
+</body>
+</html>
