@@ -2,82 +2,28 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>ŞekerKerimSecurity | ÖGG Sınav Sistemi</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ŞekerKerimSecurity | ÖGG Deneme Sınavı</title>
 <style>
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0f1b24;
-  color:#fff;
-}
-header{
-  background:#111;
-  padding:20px;
-  text-align:center;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#0f1b24;color:#fff;}
+header{background:#111;padding:20px;text-align:center;}
 header h1{margin:0;color:#2ecc71;}
 header small{color:#aaa;}
-
 .container{max-width:900px;margin:auto;padding:20px;}
-.btn{
-  background:#2ecc71;
-  border:none;
-  padding:15px;
-  width:100%;
-  margin:10px 0;
-  font-size:18px;
-  cursor:pointer;
-  border-radius:6px;
-}
-.btn.secondary{background:#3498db;}
+.btn{width:100%;padding:15px;font-size:18px;border:none;border-radius:6px;margin:10px 0;cursor:pointer;background:#2ecc71;color:#000;}
+.btn.secondary{background:#3498db;color:#fff;}
 .hidden{display:none;}
-
-.card{
-  background:#16232e;
-  padding:20px;
-  border-radius:8px;
-  margin-top:15px;
-}
-
-.option{
-  background:#1e3445;
-  padding:12px;
-  margin:8px 0;
-  border-radius:6px;
-  cursor:pointer;
-}
+.card{background:#16232e;padding:20px;border-radius:8px;margin-top:15px;}
+.option{background:#1e3445;padding:12px;margin:8px 0;border-radius:6px;cursor:pointer;}
 .option:hover{background:#25455f;}
 .correct{background:#2ecc71!important;color:#000;}
 .wrong{background:#c0392b!important;}
-
 #timer{color:#f1c40f;font-weight:bold;margin-bottom:10px;}
-
-footer{
-  text-align:center;
-  padding:20px;
-  color:#aaa;
-  font-size:14px;
-}
-
-a.insta{
-  color:#fff;
-  text-decoration:none;
-  background:#e84393;
-  padding:10px 15px;
-  border-radius:20px;
-  display:inline-block;
-  margin-top:10px;
-}
-
-#live{
-  font-size:13px;
-  color:#aaa;
-  margin-top:10px;
-}
+footer{text-align:center;padding:20px;color:#aaa;font-size:14px;}
+a.insta{color:#fff;text-decoration:none;background:#e84393;padding:10px 15px;border-radius:20px;display:inline-block;margin-top:10px;}
+#live{font-size:13px;color:#aaa;margin-top:10px;}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -93,7 +39,6 @@ a.insta{
 <button class="btn secondary" onclick="startExam('silahlı')">Silahlı ÖGG Deneme</button>
 
 <div id="live"></div>
-
 <a class="insta" href="https://www.instagram.com/kerimm.b/" target="_blank">Instagram @kerimm.b</a>
 </div>
 
@@ -117,40 +62,46 @@ a.insta{
 </footer>
 
 <script>
-const names=[
-"Abdul Samet","Nurullah Başkan","Furkan Uçar","Melih Özay","Muhammed Konuş",
-"Okan","Baran","Emin","Emre","İsmail Dal","Serhat Olgun","Raziye Kavramak",
-"Rabia","Hatice","Etoo","Tuğba","Kenan Komutan"
-];
-
+// Canlı isim akışı
+const names=["Abdul Samet","Nurullah Başkan","Furkan Uçar","Melih Özay","Muhammed Konuş","Okan","Baran","Emin","Emre","İsmail Dal","Serhat Olgun","Raziye Kavramak","Rabia","Hatice","Etoo","Tuğba","Kenan Komutan"];
 let liveIndex=0;
 setInterval(()=>{
-  document.getElementById("live").innerText =
-  names[liveIndex%names.length]+" sınav çözüyor – Puan: "+(50+Math.floor(Math.random()*50));
+  document.getElementById("live").innerText=names[liveIndex%names.length]+" sınav çözüyor – Puan: "+(50+Math.floor(Math.random()*50));
   liveIndex++;
 },4500);
 
-// ===== SORULAR (ÖRNEK 20 – ALTYAPI 100) =====
+// SORULAR (örnek 25 farklı soru, 100'e kadar çoğaltılabilir)
 const questions=[
-{q:"Özel güvenlik görevlisinin yetkileri hangi kanunla düzenlenmiştir?",
-o:["2559","5188","5237","5271","5442"],a:1},
-
-{q:"Aşağıdakilerden hangisi özel güvenlik görevlisinin görevlerinden değildir?",
-o:["Koruma","Önleme","Yakalama","Soruşturma","Devriye"],a:3},
-
-{q:"Zor kullanmada ilk aşama hangisidir?",
-o:["Silah","Beden gücü","Kelepçe","Cop","Kimyasal"],a:1},
-
-{q:"Kelepçe hangi durumda takılır?",
-o:["Her yakalamada","Direnç varsa","Şüphe varsa","Kimlik yoksa","İfade alınacaksa"],a:1},
-
-{q:"ÖGG silahını nerede kullanamaz?",
-o:["Görev alanında","Meşru savunmada","Toplantı alanında","Can tehlikesinde","Zorunluluk halinde"],a:2},
+{q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"],a:3},
+{q:"Zor kullanmanın unsurları hangi seçenekte doğru verilmiştir?",o:["Silah – kelepçe – cop","Beden gücü – maddi güç – silah","Cop – kelepçe – silah","Kimlik – yakalama – arama","Silah – biber gazı – cop"],a:0},
+{q:"Aşağıdakilerden hangisi özel güvenlik görevlisinin yetkileri arasında yer almaz?",o:["Önleyici arama","Adli arama","Yakalama","Suç delilini muhafaza","Olay yerini koruma"],a:1},
+{q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanır?",o:["Her vatandaşa","Şüpheli davranış varsa","Sadece amirin emriyle","Toplu alanlarda","Mesai dışında"],a:1},
+{q:"Aşağıdakilerden hangisi silah kullanma şartlarından biridir?",o:["Şüphelenmek","Amirin emri","Meşru savunma","Kimlik sormak","Caydırıcılık"],a:2},
+{q:"Kelepçe takma ile ilgili hangisi doğrudur?",o:["Her yakalanana takılır","Direnç gösterene takılır","Kimliği olmayana takılır","Şikayetçiye takılır","Tanığa takılır"],a:0},
+{q:"Özel güvenlik görevlisinin çalışma izni kaç yılda bir yenilenir?",o:["1","2","3","4","5"],a:1},
+{q:"Aşağıdakilerden hangisi iletişimde empatiyi ifade eder?",o:["Karşıyı susturmak","Karşıyı anlamaya çalışmak","Emir vermek","Yüksek sesle konuşmak","Göz teması kurmamak"],a:1},
+{q:"Olay yerinde ilk yapılması gereken nedir?",o:["Basına bilgi vermek","Şüpheliyi dövmek","Olay yerini koruma altına almak","Tanıkları uzaklaştırmak","Delilleri toplamak"],a:2},
+{q:"Özel güvenlik görevlisi hangi durumda üst araması yapabilir?",o:["Her zaman","Şüphe varsa","Kanunda belirtilen hallerde","Amirin isteğiyle","Vatandaş isterse"],a:2},
+{q:"Silahlı özel güvenlik görevlisi hangi durumda silahını kullanabilir?",o:["Keyfi kullanım","Meşru savunma","Sürekli taşımak","Görev bitiminde","Amirin isteği"],a:1},
+{q:"Özel güvenlik kimliği ne zaman taşınmalıdır?",o:["Her zaman","Sadece görevde","İzinsiz","Amir emriyle","Yalnızca devriye"],a:0},
+{q:"Zor kullanmada öncelikli araç hangisidir?",o:["Beden gücü","Silah","Cop","Kelepçe","Biber gazı"],a:0},
+{q:"Hangi durumda ÖGG rapor tutar?",o:["Her olayda","Amir isterse","Sadece suçta","İhtiyaç varsa","Yasaya uygun"],a:4},
+{q:"Özel güvenlik görevlisi hangi durumda kişiyi gözaltına alabilir?",o:["Her zaman","Kanunda belirtilen hallerde","Sadece şüpheli","Amir isteğiyle","Vatandaş talep ederse"],a:1},
+{q:"Aşağıdakilerden hangisi devriye görevlerinden değildir?",o:["Olay yerini kontrol","Kişi güvenliği","Arama yapmak","Kollukla işbirliği","Basın bilgilendirmesi"],a:4},
+{q:"Kolluk kuvvetine hangi durumda haber verilir?",o:["Olay anında","Şüpheli harekette","İstendiğinde","Yasaya aykırı durumlarda","Her durumda"],a:0},
+{q:"ÖGG görev alanı dışına hangi durumda çıkabilir?",o:["Hiçbir zaman","Acil durum","Amir emri","Toplantıda","Tatilde"],a:1},
+{q:"Kamu düzenini hangi araçla sağlar?",o:["Silah","Beden gücü","Bilgi","Kelepçe","Cop"],a:2},
+{q:"Görev sırasında hangi iletişim aracı zorunludur?",o:["Radyo","Telefon","Faks","Yazı","Email"],a:0},
+{q:"Arama ve yakalamada hangi unsur önemlidir?",o:["Kanun","Şüphe","Amir","Mesai","Tanık"],a:0},
+{q:"ÖGG silahını nerede kullanamaz?",o:["Görev alanı dışında","Meşru savunma","Tehdit altında","Olay yerinde","Acil durumda"],a:0},
+{q:"Kollukla işbirliği neden önemlidir?",o:["Kanun gereği","Halk güvenliği","Amir isteği","Toplum hizmeti","Rastgele"],a:1},
+{q:"Kamu mallarını koruma yetkisi hangi görevi kapsar?",o:["Devriye","Önleme","Yakalama","Arama","Kolluk ile işbirliği"],a:0},
+{q:"Hangi durumda zor kullanılamaz?",o:["Tehdit varsa","Meşru savunma","Keyfi olarak","Kanun çerçevesinde","Caydırıcılık amaçlı"],a:2},
 ];
 
-// 100’e tamamlamak için otomatik çoğaltma
+// 100 soruya tamamlamak için çoğalt
 while(questions.length<100){
-  questions.push({...questions[questions.length%5]});
+  questions.push({...questions[questions.length%25]});
 }
 
 let qs=[],index=0,answers=[],time=120*60,timer;
@@ -167,8 +118,7 @@ function startExam(type){
 function startTimer(){
   timer=setInterval(()=>{
     time--;
-    document.getElementById("timer").innerText=
-    "Kalan Süre: "+Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
+    document.getElementById("timer").innerText="Kalan Süre: "+Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
     if(time<=0){finish();}
   },1000);
 }
@@ -182,12 +132,12 @@ function showQuestion(){
     const d=document.createElement("div");
     d.className="option";
     d.innerText=String.fromCharCode(65+i)+") "+t;
-    d.onclick=()=>select(i,d);
+    d.onclick=()=>selectOption(i,d);
     opt.appendChild(d);
   });
 }
 
-function select(i,el){
+function selectOption(i,el){
   if(answers[index]!=null) return;
   answers[index]=i;
   document.querySelectorAll(".option").forEach((o,j)=>{
@@ -195,8 +145,8 @@ function select(i,el){
   });
   setTimeout(()=>{
     index++;
-    if(index%10===0)alert("10 soru tamamlandı");
-    if(index<100)showQuestion(); else finish();
+    if(index%10===0 && index<100) alert("10 soru tamamlandı");
+    if(index<100) showQuestion(); else finish();
   },800);
 }
 
@@ -205,10 +155,15 @@ function finish(){
   document.getElementById("exam").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
   const correct=answers.filter((a,i)=>a===qs[i].a).length;
-  document.getElementById("finalScore").innerHTML=
-  `<b>${correct}/100</b><br>${correct>=60?"BAŞARILI":"BAŞARISIZ"}`;
+  const wrong=100-correct;
+  const status=correct>=60?"BAŞARILI":"BAŞARISIZ";
+  document.getElementById("finalScore").innerHTML=`
+    <h2>${status}</h2>
+    <p><b>Doğru:</b> ${correct}</p>
+    <p><b>Yanlış:</b> ${wrong}</p>
+    <p style="font-size:22px;color:${correct>=60?"#2ecc71":"#e74c3c"}">PUANIN: ${correct}</p>
+  `;
 }
 </script>
-
 </body>
 </html>
