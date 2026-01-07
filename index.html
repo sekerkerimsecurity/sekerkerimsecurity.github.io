@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="ŞekerKerim Özel Güvenlik Sınav Sistemi">
 
-<title>ŞekerKerim Platinum | Next-Gen Security</title>
+<title>ŞekerKerim Platinum | Ultimate</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,307 +16,273 @@
 
 <style>
     :root {
-        --bg-body: #0f172a;
-        --card-bg: rgba(30, 41, 59, 0.7);
+        --bg-body: #0b1120;
+        --card-bg: rgba(30, 41, 59, 0.65);
         --glass-border: rgba(255, 255, 255, 0.08);
         --primary: #06b6d4; /* Cyan */
-        --primary-dark: #0891b2;
+        --primary-glow: rgba(6, 182, 212, 0.5);
         --secondary: #8b5cf6; /* Violet */
-        --success: #10b981; /* Green */
-        --success-glow: rgba(16, 185, 129, 0.4);
-        --danger: #ef4444; /* Red */
-        --danger-glow: rgba(239, 68, 68, 0.4);
+        --success: #10b981;
+        --danger: #ef4444;
+        --gold: #f59e0b;
         --text: #f8fafc;
         --text-dim: #94a3b8;
-        --notch-padding: env(safe-area-inset-top);
-        --bottom-padding: env(safe-area-inset-bottom);
+        --safe-top: env(safe-area-inset-top);
+        --safe-bottom: env(safe-area-inset-bottom);
     }
 
-    * { 
-        box-sizing: border-box; 
-        -webkit-tap-highlight-color: transparent; 
-        outline: none; 
-        user-select: none; 
-        -webkit-user-select: none;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
     
-    html, body {
+    body {
         margin: 0; padding: 0;
         font-family: 'Outfit', sans-serif;
         background: var(--bg-body);
         color: var(--text);
-        height: 100%;
-        width: 100%;
+        height: 100vh;
         overflow: hidden;
-        overscroll-behavior: none; /* iOS Elastic scroll prevent */
+        overscroll-behavior: none;
     }
 
-    /* --- ANIMATED BACKGROUND --- */
-    .ambient-light {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-        background: 
-            radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12), transparent 40%),
-            radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12), transparent 40%);
-        animation: breath 8s ease-in-out infinite alternate;
+    /* --- DYNAMIC BACKGROUND --- */
+    .bg-mesh {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+        background: radial-gradient(circle at 0% 0%, rgba(6,182,212,0.15), transparent 40%),
+                    radial-gradient(circle at 100% 100%, rgba(139,92,246,0.15), transparent 40%);
+        filter: blur(40px);
     }
-    @keyframes breath { 0% { opacity: 0.6; transform: scale(1); } 100% { opacity: 1; transform: scale(1.05); } }
 
-    /* --- LAYOUT --- */
-    .app-viewport {
+    /* --- APP LAYOUT --- */
+    .app-container {
         display: flex; flex-direction: column;
         height: 100%;
-        padding-top: max(20px, var(--notch-padding));
-        padding-bottom: calc(80px + var(--bottom-padding));
-        overflow-y: auto;
+        padding-top: max(10px, var(--safe-top));
+        padding-bottom: calc(70px + var(--safe-bottom));
+        position: relative;
+    }
+
+    .scroll-view {
+        flex: 1; overflow-y: auto; padding: 0 20px;
         scroll-behavior: smooth;
     }
 
-    .container {
-        padding: 0 20px;
-        max-width: 600px;
-        margin: 0 auto;
-        width: 100%;
-    }
-
     .hidden { display: none !important; }
-    .fade-in { animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- HEADER & TICKER --- */
-    header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 20px;
+    /* --- TICKER (KAYAN YAZI) --- */
+    .ticker-container {
+        background: linear-gradient(90deg, rgba(6,182,212,0.1), rgba(139,92,246,0.1));
+        border-bottom: 1px solid var(--glass-border);
+        height: 36px; display: flex; align-items: center; overflow: hidden;
+        margin-bottom: 15px; position: relative;
     }
-    .brand h1 { 
-        margin: 0; font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; 
-        background: linear-gradient(to right, #fff, #cbd5e1); 
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    .ticker-content {
+        display: flex; white-space: nowrap;
+        animation: tickerScroll 45s linear infinite; /* İsimler çok olduğu için süre uzatıldı */
     }
-    .brand span { font-size: 0.65rem; color: var(--primary); font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; display: block; margin-top: 2px;}
-    
-    .rank-pill {
-        background: rgba(255,255,255,0.07); padding: 6px 14px; border-radius: 20px;
-        font-size: 0.75rem; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 6px;
-        backdrop-filter: blur(5px);
+    .ticker-item {
+        padding: 0 20px; font-size: 0.75rem; font-weight: 700; 
+        color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;
+        display: flex; align-items: center; gap: 5px;
     }
+    @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-    /* Kayan Yazı Bandı */
-    .ticker-wrap {
-        width: 100%; overflow: hidden; background: rgba(6, 182, 212, 0.1); 
-        border-top: 1px solid rgba(6, 182, 212, 0.2); border-bottom: 1px solid rgba(6, 182, 212, 0.2);
-        padding: 8px 0; margin-bottom: 20px; white-space: nowrap; position: relative;
-    }
-    .ticker { display: inline-block; animation: marquee 20s linear infinite; }
-    .ticker-item { display: inline-block; padding: 0 2rem; font-size: 0.85rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
-    @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
-
-    /* --- CARDS --- */
+    /* --- CARDS & UI --- */
     .card {
         background: var(--card-bg);
-        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border);
-        border-radius: 24px; padding: 24px; margin-bottom: 20px;
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.4);
+        border-radius: 24px; padding: 20px; margin-bottom: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
 
-    /* --- EXAM UI --- */
-    .timer-bar {
-        width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; overflow: hidden;
-    }
-    .timer-fill {
-        height: 100%; background: var(--primary); width: 100%; transition: width 1s linear;
-    }
-
-    .q-text { font-size: 1.15rem; font-weight: 600; line-height: 1.6; margin-top: 10px;}
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .brand-title { font-size: 1.5rem; font-weight: 900; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    /* Gelişmiş Şık Tasarımı */
-    .option {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 18px; border-radius: 16px; margin-bottom: 12px;
-        display: flex; align-items: center; cursor: pointer; 
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .streak-badge {
+        background: rgba(245, 158, 11, 0.2); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4);
+        padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+        display: flex; align-items: center; gap: 5px; opacity: 0; transition: 0.3s;
+    }
+    .streak-badge.active { opacity: 1; transform: scale(1.1); }
+
+    /* --- EXAM QUESTION CARD --- */
+    .question-card {
+        min-height: 180px; display: flex; flex-direction: column; justify-content: center;
         position: relative; overflow: hidden;
-        touch-action: manipulation;
     }
-    
-    .option:active { transform: scale(0.98); }
-    
-    .opt-char { 
-        width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1);
-        display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0;
-        font-size: 0.9rem; transition: 0.3s;
+    /* Swipe Indicators */
+    .swipe-hint {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        font-size: 2rem; color: rgba(255,255,255,0.1); pointer-events: none;
     }
+    .swipe-left { left: 10px; } .swipe-right { right: 10px; }
 
-    /* Cevaplama Durumları (Correct/Wrong System) */
-    .option.correct {
-        background: rgba(16, 185, 129, 0.15); border-color: var(--success);
-        box-shadow: 0 0 15px var(--success-glow);
+    .q-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; align-self: flex-start; margin-bottom: 10px; }
+    .q-text { font-size: 1.25rem; font-weight: 600; line-height: 1.5; }
+
+    /* --- OPTIONS --- */
+    .option {
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+        padding: 16px; border-radius: 16px; margin-bottom: 10px;
+        display: flex; align-items: center; transition: 0.2s; position: relative; overflow: hidden;
+        cursor: pointer;
     }
+    .option:active { transform: scale(0.98); background: rgba(255,255,255,0.06); }
+    .opt-char { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0; }
+    
+    /* Correct/Wrong Styles */
+    .option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
     .option.correct .opt-char { background: var(--success); color: #fff; }
-
-    .option.wrong {
-        background: rgba(239, 68, 68, 0.15); border-color: var(--danger);
-        animation: shake 0.4s ease-in-out;
-    }
+    
+    .option.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); animation: shake 0.4s; }
     .option.wrong .opt-char { background: var(--danger); color: #fff; }
-
-    /* Cevap verildikten sonra diğer şıkların pasifleşmesi */
-    .options-locked .option { pointer-events: none; opacity: 0.6; }
-    .options-locked .option.correct, .options-locked .option.wrong { opacity: 1; }
-
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
     /* --- BOTTOM NAV --- */
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; width: 100%;
-        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px);
         border-top: 1px solid var(--glass-border);
         display: flex; justify-content: space-around;
-        padding-top: 12px; padding-bottom: max(12px, var(--bottom-padding));
-        z-index: 100;
+        padding-top: 12px; padding-bottom: max(12px, var(--safe-bottom));
+        z-index: 50;
     }
-    .nav-item {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        color: var(--text-dim); font-size: 0.7rem; transition: 0.3s; width: 60px;
-    }
-    .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; transition: 0.3s; }
-    .nav-item.active { color: var(--primary); }
-    .nav-item.active svg { transform: translateY(-3px); filter: drop-shadow(0 4px 6px var(--primary-glow)); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-dim); font-size: 0.7rem; transition: 0.3s; width: 60px;}
+    .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+    .nav-item.active { color: var(--primary); transform: translateY(-2px); }
+    .nav-item.active svg { filter: drop-shadow(0 0 8px var(--primary)); }
 
     /* --- BUTTONS --- */
-    .btn-action {
-        width: 100%; padding: 18px; border-radius: 16px; border: none;
-        font-size: 1rem; font-weight: 700; color: #fff; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 10px;
-        transition: 0.3s;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    .btn-grad {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: #fff; border: none; padding: 16px; width: 100%;
+        border-radius: 16px; font-weight: 700; font-size: 1rem;
+        box-shadow: 0 10px 20px -5px var(--primary-glow);
+        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-glow { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
-    .btn-glow:active { transform: scale(0.97); }
-    
-    /* --- GRID MODAL --- */
-    .modal-overlay {
+    .btn-grad:active { transform: scale(0.97); }
+
+    /* --- MODAL --- */
+    .modal {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
-        z-index: 200; visibility: hidden; opacity: 0; transition: 0.3s;
+        background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+        z-index: 100; visibility: hidden; opacity: 0; transition: 0.3s;
         display: flex; align-items: flex-end;
     }
-    .modal-overlay.open { visibility: visible; opacity: 1; }
-    .modal-content {
-        background: #1e293b; width: 100%; border-radius: 30px 30px 0 0;
-        padding: 30px 20px calc(20px + var(--bottom-padding)) 20px;
-        max-height: 85vh; overflow-y: auto;
-        transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    .modal.open { visibility: visible; opacity: 1; }
+    .modal-sheet {
+        background: #1e293b; width: 100%; border-radius: 24px 24px 0 0;
+        padding: 25px 20px calc(20px + var(--safe-bottom)) 20px;
+        transform: translateY(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        max-height: 80vh; overflow-y: auto;
     }
-    .modal-overlay.open .modal-content { transform: translateY(0); }
-    
-    .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-    .grid-item {
-        aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px;
-        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;
+    .modal.open .modal-sheet { transform: translateY(0); }
+
+    .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .grid-cell { 
+        aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 8px; 
+        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;
     }
-    .grid-item.correct { background: var(--success); color: #fff; }
-    .grid-item.wrong { background: var(--danger); color: #fff; }
-    .grid-item.current { border: 2px solid #fff; }
+    .grid-cell.c { background: var(--success); color: #fff; }
+    .grid-cell.w { background: var(--danger); color: #fff; }
+    .grid-cell.active { border: 2px solid #fff; }
+
 </style>
 </head>
 <body>
 
-<div class="ambient-light"></div>
+<div class="bg-mesh"></div>
 
-<div class="ticker-wrap">
-    <div class="ticker">
-        <div class="ticker-item">⭐ ŞEKERKERİM PLATINUM VIP ÜYELER:</div>
-        <div class="ticker-item">ABDUL SAMET</div>
-        <div class="ticker-item">SUDEM</div>
-        <div class="ticker-item">POLİS ABİ</div>
-        <div class="ticker-item">KENAN KOMUTAN</div>
-        <div class="ticker-item">VE İŞTE DİĞERLERİ...</div>
-        <div class="ticker-item">⭐ ŞEKERKERİM PLATINUM VIP ÜYELER:</div>
-        <div class="ticker-item">ABDUL SAMET</div>
-        <div class="ticker-item">SUDEM</div>
-        <div class="ticker-item">POLİS ABİ</div>
-    </div>
+<div class="ticker-container">
+    <div class="ticker-content" id="ticker-track">
+        </div>
+    <div class="ticker-content" id="ticker-track-2"></div> 
 </div>
 
-<div class="app-viewport">
+<div class="app-container">
     
-    <div id="view-dashboard" class="container fade-in">
-        <header>
-            <div class="brand">
-                <h1>ŞEKERKERIM</h1>
-                <span>NEXT-GEN SECURITY</span>
-            </div>
-            <div class="rank-pill" id="user-rank">🎖️ Çaylak</div>
-        </header>
-
-        <div class="card">
-            <h2 style="margin-top:0;">Hazır mısın? 🛡️</h2>
-            <p style="color:var(--text-dim); font-size:0.95rem;">Anlık geri bildirimli, profesyonel sınav simülasyonu.</p>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:25px;">
-                <div onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.1); padding:20px; border-radius:20px; border:1px solid var(--primary); cursor:pointer; text-align:center; transition:0.2s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">
-                    <div style="font-size:2.2rem; margin-bottom:8px;">🛡️</div>
-                    <div style="font-weight:700; color:var(--primary);">SİLAHSIZ</div>
-                    <div style="font-size:0.75rem; opacity:0.7;">100 Soru • Eğitim Modu</div>
-                </div>
-                <div onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.1); padding:20px; border-radius:20px; border:1px solid var(--secondary); cursor:pointer; text-align:center; transition:0.2s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">
-                    <div style="font-size:2.2rem; margin-bottom:8px;">🔫</div>
-                    <div style="font-weight:700; color:var(--secondary);">SİLAHLI</div>
-                    <div style="font-size:0.75rem; opacity:0.7;">125 Soru • Eğitim Modu</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="margin:0;">Haftalık Performans</h3>
-                <span style="font-size:0.8rem; color:var(--primary);">Detaylar →</span>
-            </div>
-            <canvas id="miniChart" height="120"></canvas>
-        </div>
-    </div>
-
-    <div id="view-exam" class="container hidden">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
+    <div id="view-dashboard" class="scroll-view fade-in">
+        <div class="header-row">
             <div>
-                <span style="font-size:0.75rem; color:var(--text-dim); letter-spacing:1px;">SORU</span>
-                <div style="font-size:1.5rem; font-weight:800;" id="q-counter">1<span style="font-size:1rem; color:var(--text-dim); font-weight:500;">/100</span></div>
+                <div class="brand-title">ŞEKERKERIM</div>
+                <div style="font-size:0.7rem; color:var(--primary); letter-spacing:2px; font-weight:700;">PLATINUM SECURITY</div>
             </div>
             <div style="text-align:right;">
-                <div style="font-family:monospace; font-size:1.2rem; font-weight:700;" id="timer-text">120:00</div>
+                 <div id="user-pill" style="background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:15px; font-size:0.7rem;">⭐ Misafir</div>
             </div>
-        </div>
-        
-        <div class="timer-bar"><div class="timer-fill" id="timer-bar"></div></div>
-
-        <div class="card" style="margin-top:20px; min-height:160px; display:flex; flex-direction:column; justify-content:center;">
-            <div style="background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:6px; font-size:0.65rem; color:var(--text-dim); align-self:flex-start; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;" id="q-category">KATEGORİ</div>
-            <div class="q-text" id="q-text">Soru yükleniyor...</div>
-        </div>
-
-        <div id="options-container">
-            </div>
-
-        <div style="display:flex; gap:15px; margin-top:25px; padding-bottom:30px;">
-            <button onclick="toggleGrid()" style="flex:1; background:rgba(255,255,255,0.1); padding:15px; border-radius:14px; border:none; color:#fff;">📋 Liste</button>
-            <button onclick="nextQuestion()" class="btn-action btn-glow" style="flex:2;">Sonraki Soru ➡</button>
-        </div>
-    </div>
-
-    <div id="view-profile" class="container hidden fade-in">
-        <div style="text-align:center; margin:40px 0;">
-            <div style="width:110px; height:110px; margin:0 auto 20px; border-radius:50%; background:linear-gradient(45deg, var(--primary), var(--secondary)); display:flex; align-items:center; justify-content:center; font-size:3rem; box-shadow:0 0 30px var(--secondary);">😎</div>
-            <h2 id="profile-name-display">Misafir Kullanıcı</h2>
-            <p style="color:var(--text-dim);">Abdul Samet'in Devresi</p>
         </div>
 
         <div class="card">
-            <label style="font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; display:block;">PROFİL AYARLARI</label>
-            <input type="text" id="name-input" placeholder="Adını Buraya Yaz" style="width:100%; padding:16px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; font-size:1rem;" oninput="updateName(this.value)">
-            <button class="btn-action" style="background:#333; margin-top:15px;" onclick="resetData()">Verileri Sıfırla</button>
+            <h2 style="margin:0 0 10px 0;">Hoşgeldin Asker 👋</h2>
+            <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:20px;">Sınava hazırlıkta en profesyonel yöntem.</p>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <button onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.15); border:1px solid var(--primary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
+                    <div style="font-size:2rem; margin-bottom:5px;">🛡️</div>
+                    <div style="font-weight:700;">Silahsız</div>
+                    <div style="font-size:0.7rem; opacity:0.7;">100 Soru</div>
+                </button>
+                <button onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.15); border:1px solid var(--secondary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
+                    <div style="font-size:2rem; margin-bottom:5px;">🔫</div>
+                    <div style="font-weight:700;">Silahlı</div>
+                    <div style="font-size:0.7rem; opacity:0.7;">125 Soru</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <h3>İstatistikler</h3>
+                <span style="color:var(--primary); font-size:0.8rem;">Son 5 Sınav</span>
+            </div>
+            <div style="height:120px;"><canvas id="miniChart"></canvas></div>
+        </div>
+    </div>
+
+    <div id="view-exam" class="scroll-view hidden">
+        <div class="header-row">
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size:0.7rem; color:var(--text-dim);">İLERLEME</span>
+                <span style="font-size:1.2rem; font-weight:800;" id="q-progress">1 / 100</span>
+            </div>
+            <div class="streak-badge" id="streak-box">🔥 3 Seri!</div>
+            <div style="font-family:monospace; font-size:1.2rem; font-weight:700;" id="timer">120:00</div>
+        </div>
+
+        <div class="card question-card" id="q-card">
+            <div class="swipe-hint swipe-left">‹</div>
+            <div class="swipe-hint swipe-right">›</div>
+            
+            <div class="q-badge" id="q-cat">HUKUK</div>
+            <div class="q-text" id="q-text">Yükleniyor...</div>
+        </div>
+
+        <div id="options-list"></div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="toggleGrid()" style="flex:1; background:rgba(255,255,255,0.1); border:none; color:#fff; padding:15px; border-radius:12px;">🗺️ Harita</button>
+            <button onclick="nextQuestion()" class="btn-grad" style="flex:2;">Sonraki ➡</button>
+        </div>
+    </div>
+
+    <div id="view-profile" class="scroll-view hidden fade-in">
+        <div style="text-align:center; padding:30px 0;">
+             <div style="width:100px; height:100px; background:linear-gradient(45deg, #06b6d4, #8b5cf6); border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px var(--primary-glow);">😎</div>
+             <h2 id="profile-name">İsimsiz</h2>
+             <p style="color:var(--text-dim);">Kıdemli Güvenlik Adayı</p>
+        </div>
+
+        <div class="card">
+            <label style="font-size:0.8rem; color:var(--text-dim);">ADINI GÜNCELLE</label>
+            <input type="text" id="name-input" placeholder="Ad Soyad..." style="width:100%; padding:15px; background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); color:#fff; border-radius:10px; margin-top:5px;" oninput="updateName(this.value)">
+        </div>
+
+        <div class="card">
+            <h3>VIP Üye Listesi</h3>
+            <p style="font-size:0.8rem; color:var(--text-dim);">Bu uygulama aşağıdaki kahramanlara ithaf edilmiştir:</p>
+            <div style="font-size:0.8rem; line-height:1.6; color:#ccc; margin-top:10px;" id="static-vip-list"></div>
         </div>
     </div>
 
@@ -327,307 +293,330 @@
         <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         Anasayfa
     </div>
+    <div class="nav-item" onclick="switchTab('exam')" id="nav-exam">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        Sınav
+    </div>
     <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
         <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         Profil
     </div>
 </nav>
 
-<div class="modal-overlay" id="grid-modal" onclick="if(event.target === this) toggleGrid()">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
+<div class="modal" id="grid-modal" onclick="if(event.target===this) toggleGrid()">
+    <div class="modal-sheet">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
             <h3>Soru Haritası</h3>
-            <button onclick="finishExam()" style="background:var(--danger); border:none; color:#fff; padding:8px 16px; border-radius:8px; font-weight:700;">TESTİ BİTİR</button>
+            <button onclick="finishExam()" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:8px;">BİTİR</button>
         </div>
-        <div class="grid-container" id="grid-container"></div>
+        <div class="grid-box" id="grid-content"></div>
     </div>
 </div>
 
 <script>
-    // --- VERİ TABANI (Sorular) ---
-    const rawQuestions = [
-        {c:"HUKUK", q:"5188 sayılı Kanuna göre, özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?", o:["Yakalama", "Emanete alma", "İfade alma", "Zor kullanma", "Kimlik sorma"], a:2},
-        {c:"İLK YARDIM", q:"Yetişkin bir insanda dakika solunum sayısı normalde ne kadardır?", o:["12-20", "20-25", "8-10", "30-40", "50-60"], a:0},
-        {c:"SİLAH", q:"Fişek yatağında fişek olup olmadığını gösteren emniyet tertibatı hangisidir?", o:["Kabza emniyeti", "İğne emniyeti", "Horoz emniyeti", "İkaz pimi (Tırnak)", "Şarjör emniyeti"], a:3},
-        {c:"İLETİŞİM", q:"İletişimde 'Empati' nedir?", o:["Sempati duymak", "Kendini karşısındakinin yerine koymak", "Öğüt vermek", "Eleştirmek", "Dinlememek"], a:1},
-        {c:"GÜVENLİK", q:"Kontrol noktasından geçen ziyaretçinin üzerinde silah tespit edilirse ne yapılır?", o:["El konulur", "Emanete alınır", "Polise haber verilir", "Geri gönderilir", "Şahıs dövülür"], a:2},
-        {c:"YANGIN", q:"B sınıfı (Sıvı) yangınlarda en etkili söndürücü madde nedir?", o:["Su", "Köpük", "Kum", "Bor", "Toprak"], a:1},
-        {c:"SİLAH", q:"Tabancada iğneye darbe yaparak patlamayı gerçekleştiren parça hangisidir?", o:["Tetik", "Horoz", "Namlu", "Gez", "Arpacık"], a:1},
-        {c:"HUKUK", q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?", o:["2", "3", "4", "5", "10"], a:3},
-        {c:"KORUMA", q:"Önemli kişi koruma (VIP) hizmetlerinde temel amaç nedir?", o:["Saldırganı yakalamak", "VIP'i kaçırmak/uzaklaştırmak", "Çatışmak", "Yolu kapatmak", "Kalabalığı dağıtmak"], a:1},
-        {c:"TEKNİK", q:"X-Ray cihazı temel olarak neyin tespitinde kullanılır?", o:["Patlayıcı", "Uyuşturucu", "Metal", "Plastik", "Sıvı"], a:2}
+    // --- VIP LISTESI (Kayan Yazı) ---
+    const vipNames = [
+        "ABDUL SAMET", "FURKAN UÇAR", "TUĞBA SUDEM", "İZNİKLİ GÜVENLİK", 
+        "MELİH SAK", "MELİH ÖZAY", "MUHAMMED KONUS", "RAZİYE KAVRAMAK", 
+        "BAŞKOM NURULLAH", "YAKIŞIKLI GÜVENLİK OKAN", "AHMET CAN ÇEVİK", 
+        "BARAN", "BERİL KAYA", "CELAL SAHAN", "EMİN", "EMRE", "ETO", 
+        "HATİCE", "İSMAİL", "RABİA", "SERHAT OLGUN", "SİNAN", "YAĞMUR", "VE DİĞERLERİ..."
     ];
 
-    // --- STATE MANAGEMENT ---
-    let app = {
-        exam: {
-            active: false,
-            questions: [],
-            answers: [], // { given: index, correct: bool }
-            currentIdx: 0,
-            timeLeft: 0,
-            timer: null
-        },
-        user: {
-            name: localStorage.getItem('sk_name') || 'Misafir',
-            stats: JSON.parse(localStorage.getItem('sk_stats')) || [10, 40, 30, 70, 50, 90]
-        }
-    };
-
-    // --- BAŞLATMA ---
-    window.onload = () => {
-        document.getElementById('profile-name-display').innerText = app.user.name;
-        document.getElementById('name-input').value = app.user.name;
-        renderChart();
-    };
-
-    // --- NAVİGASYON ---
-    function switchTab(tab) {
-        // Alt menü aktifliği
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById(`nav-${tab}`).classList.add('active');
+    // --- SES MOTORU (Web Audio API - Dosyasız) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
         
-        // Ekran değişimi
-        ['dashboard', 'exam', 'profile'].forEach(v => {
-            const el = document.getElementById(`view-${v}`);
-            if(v === tab) {
-                el.classList.remove('hidden');
-                if(tab === 'dashboard') renderChart(); // Chart refresh
-            } else {
-                el.classList.add('hidden');
-            }
+        if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
+
+    // --- VERİ ---
+    const rawQuestions = [
+        {c:"HUKUK", q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?", o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"], a:3},
+        {c:"İLK YARDIM", q:"Bebeklerde bilinç kontrolü nasıl yapılır?", o:["Yanaklarına vurarak","Topuklarına vurarak","Sarsarak","Su dökerek","Seslenerek"], a:1},
+        {c:"SİLAH", q:"Fişek yatağında fişek olduğunu gösteren emniyet sistemi hangisidir?", o:["Şarjör emniyeti","Kabza emniyeti","İkaz pimi","Horoz emniyeti","Mandal emniyeti"], a:2},
+        {c:"İLETİŞİM", q:"Empati nedir?", o:["Sempati duymak","Karşıdakinin yerine kendini koymak","Akıl vermek","Dinlememek","Emir vermek"], a:1},
+        {c:"GÜVENLİK", q:"X-Ray cihazı temel olarak ne tespit eder?", o:["Patlayıcı","Uyuşturucu","Yoğunluk farkı (Metal vb.)","Plastik","Sıvı"], a:2},
+        {c:"YANGIN", q:"Elektrik yangınlarında hangisi KULLANILMAZ?", o:["Kuru toz","CO2","Su","Halokarbon","Köpük"], a:2},
+        {c:"KORUMA", q:"VIP korumada temel amaç nedir?", o:["Saldırganı öldürmek","Kişiyi kaçırmak/uzaklaştırmak","Kalabalığı dövmek","Yolu kapatmak","Medya ile konuşmak"], a:1},
+        {c:"HUKUK", q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?", o:["2","3","4","5","Süresizdir"], a:3},
+        {c:"SİLAH", q:"Tetiği çekince horozun düşmesini sağlayan parça?", o:["İğne","Gez","Arpacık","Tetik manivelası","Namlu"], a:3},
+        {c:"İLK YARDIM", q:"Turnike uygulaması hangi durumda yapılır?", o:["Burun kanamasında","Uzuv kopmasında","Baş ağrısında","Kırıklarda","Yanıklarda"], a:1}
+    ];
+
+    // --- STATE ---
+    let app = {
+        questions: [],
+        answers: [], // {given: index, correct: bool}
+        idx: 0,
+        timer: null,
+        timeLeft: 0,
+        streak: 0,
+        user: localStorage.getItem('sk_user') || 'Öğrenci'
+    };
+
+    // --- INIT ---
+    window.onload = () => {
+        // Ticker Doldur
+        const track = document.getElementById('ticker-track');
+        let html = '';
+        vipNames.forEach(n => html += `<div class="ticker-item">⭐ ${n}</div>`);
+        track.innerHTML = html;
+        document.getElementById('ticker-track-2').innerHTML = html; // Loop için
+
+        // Profil
+        document.getElementById('name-input').value = app.user;
+        document.getElementById('profile-name').innerText = app.user;
+        document.getElementById('user-pill').innerText = '👤 ' + app.user;
+
+        // Static List
+        document.getElementById('static-vip-list').innerHTML = vipNames.join(' • ');
+
+        initChart();
+        setupSwipe();
+    };
+
+    // --- NAVIGATION ---
+    function switchTab(tab) {
+        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+        document.getElementById(`nav-${tab}`).classList.add('active');
+        ['dashboard', 'exam', 'profile'].forEach(t => {
+            const el = document.getElementById(`view-${t}`);
+            if(t === tab) el.classList.remove('hidden');
+            else el.classList.add('hidden');
         });
     }
 
-    // --- SINAV MOTORU ---
+    // --- EXAM LOGIC ---
     function startExam(type) {
-        // Demo için soruları çoğalt
+        // Prepare Questions
         let pool = [];
-        const count = type === 'silahsız' ? 10 : 15; // Demo için kısa tuttum, 100 yaparsan array duplicate et
+        const count = type === 'silahsız' ? 100 : 125;
+        // Demo için soruları çoğaltıyorum
         while(pool.length < count) pool.push(...rawQuestions);
         pool = pool.slice(0, count).sort(() => Math.random() - 0.5);
 
-        app.exam = {
-            active: true,
-            questions: pool,
-            answers: new Array(count).fill(null),
-            currentIdx: 0,
-            timeLeft: (type === 'silahsız' ? 120 : 150) * 60,
-            timer: setInterval(tick, 1000)
-        };
-
-        document.querySelector('.bottom-nav').classList.add('hidden'); // Sınavda menüyü gizle
+        app.questions = pool;
+        app.answers = new Array(count).fill(null);
+        app.idx = 0;
+        app.streak = 0;
+        app.timeLeft = (type === 'silahsız' ? 120 : 150) * 60;
+        
+        document.querySelector('.bottom-nav').classList.add('hidden');
         switchTab('exam');
         renderQuestion();
+        
+        if(app.timer) clearInterval(app.timer);
+        app.timer = setInterval(tick, 1000);
     }
 
     function tick() {
-        if(app.exam.timeLeft <= 0) { finishExam(); return; }
-        app.exam.timeLeft--;
-        
-        // Süre Formatı
-        const m = Math.floor(app.exam.timeLeft / 60);
-        const s = app.exam.timeLeft % 60;
-        document.getElementById('timer-text').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-        
-        // Progress Bar
-        const totalTime = 120 * 60;
-        const pct = (app.exam.timeLeft / totalTime) * 100;
-        document.getElementById('timer-bar').style.width = pct + '%';
-        
-        if(pct < 20) document.getElementById('timer-bar').style.background = 'var(--danger)';
+        app.timeLeft--;
+        const m = Math.floor(app.timeLeft / 60);
+        const s = app.timeLeft % 60;
+        document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
+        if(app.timeLeft <= 0) finishExam();
     }
 
     function renderQuestion() {
-        const q = app.exam.questions[app.exam.currentIdx];
-        const status = app.exam.answers[app.exam.currentIdx]; // null or {given:X, correct:bool}
+        const q = app.questions[app.idx];
+        const ans = app.answers[app.idx];
 
-        document.getElementById('q-counter').innerHTML = `${app.exam.currentIdx + 1}<span style="font-size:1rem; color:var(--text-dim); font-weight:500;">/${app.exam.questions.length}</span>`;
-        document.getElementById('q-category').innerText = q.c;
+        document.getElementById('q-progress').innerText = `${app.idx + 1} / ${app.questions.length}`;
+        document.getElementById('q-cat').innerText = q.c;
         document.getElementById('q-text').innerText = q.q;
 
-        const container = document.getElementById('options-container');
-        container.innerHTML = '';
-        container.className = status ? 'options-locked' : '';
+        const list = document.getElementById('options-list');
+        list.innerHTML = '';
 
-        q.o.forEach((opt, idx) => {
+        q.o.forEach((opt, i) => {
             const div = document.createElement('div');
-            let className = 'option';
-            
-            // Eğer cevap verildiyse renklendir
-            if(status) {
-                if(idx === q.a) className += ' correct'; // Doğru olan her zaman yeşil yanar
-                if(idx === status.given && !status.correct) className += ' wrong'; // Yanlış seçtiyse kırmızı
+            let cls = 'option';
+            if(ans) {
+                if(i === q.a) cls += ' correct';
+                else if(i === ans.given) cls += ' wrong';
+                div.style.pointerEvents = 'none'; // Lock
             }
-
-            div.className = className;
-            div.innerHTML = `<div class="opt-char">${String.fromCharCode(65+idx)}</div> ${opt}`;
-            
-            // Tıklama olayları
-            if(!status) {
-                div.onclick = () => checkAnswer(idx, q.a);
-            }
-            
-            container.appendChild(div);
+            div.className = cls;
+            div.innerHTML = `<div class="opt-char">${String.fromCharCode(65+i)}</div> ${opt}`;
+            if(!ans) div.onclick = () => selectAnswer(i, q.a);
+            list.appendChild(div);
         });
+
+        // Swipe Hints
+        document.querySelector('.swipe-left').style.opacity = app.idx > 0 ? 0.3 : 0;
+        document.querySelector('.swipe-right').style.opacity = app.idx < app.questions.length-1 ? 0.3 : 0;
     }
 
-    // --- DOĞRU/YANLIŞ SİSTEMİ (HEART OF THE SYSTEM) ---
-    function checkAnswer(selectedIdx, correctIdx) {
-        const isCorrect = selectedIdx === correctIdx;
+    function selectAnswer(given, correct) {
+        const isCorrect = given === correct;
+        app.answers[app.idx] = { given, correct: isCorrect };
         
-        // State Kaydet
-        app.exam.answers[app.exam.currentIdx] = {
-            given: selectedIdx,
-            correct: isCorrect
-        };
-
-        // Haptik Geri Bildirim (Android Titreşim)
-        if(navigator.vibrate) {
-            if(isCorrect) navigator.vibrate(50); // Kısa titreşim
-            else navigator.vibrate([100, 50, 100]); // İki kere titret (Hata)
+        if(isCorrect) {
+            app.streak++;
+            playSound('correct');
+            if(app.streak > 2) showStreak();
+        } else {
+            app.streak = 0;
+            playSound('wrong');
+            if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+            hideStreak();
         }
+        
+        renderQuestion();
+    }
 
-        renderQuestion(); // UI Güncelle (Renklendir)
+    function showStreak() {
+        const badge = document.getElementById('streak-box');
+        badge.innerText = `🔥 ${app.streak} Seri!`;
+        badge.classList.add('active');
+    }
+    function hideStreak() {
+        document.getElementById('streak-box').classList.remove('active');
     }
 
     function nextQuestion() {
-        if(app.exam.currentIdx < app.exam.questions.length - 1) {
-            app.exam.currentIdx++;
+        if(app.idx < app.questions.length - 1) {
+            app.idx++;
             renderQuestion();
         } else {
-            // Son soruda ise listeyi aç
             toggleGrid();
         }
     }
+    
+    function prevQuestion() {
+        if(app.idx > 0) {
+            app.idx--;
+            renderQuestion();
+        }
+    }
 
-    // --- GRID MENU ---
+    // --- SWIPE LOGIC (Dokunmatik Kaydırma) ---
+    function setupSwipe() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const card = document.getElementById('q-card');
+
+        card.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        card.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            if (touchEndX < touchStartX - 50) nextQuestion(); // Sola kaydır (İleri)
+            if (touchEndX > touchStartX + 50) prevQuestion(); // Sağa kaydır (Geri)
+        }
+    }
+
+    // --- GRID & FINISH ---
     function toggleGrid() {
         const modal = document.getElementById('grid-modal');
-        const container = document.getElementById('grid-container');
+        const content = document.getElementById('grid-content');
         
-        if(!modal.classList.contains('open')) {
-            // Render Grid
-            container.innerHTML = '';
-            app.exam.answers.forEach((ans, i) => {
+        if(modal.classList.contains('open')) {
+            modal.classList.remove('open');
+        } else {
+            content.innerHTML = '';
+            app.answers.forEach((ans, i) => {
                 const div = document.createElement('div');
-                let cls = 'grid-item';
-                if(i === app.exam.currentIdx) cls += ' current';
-                if(ans) cls += ans.correct ? ' correct' : ' wrong';
-                
+                let cls = 'grid-cell';
+                if(i === app.idx) cls += ' active';
+                if(ans) cls += ans.correct ? ' c' : ' w';
                 div.className = cls;
                 div.innerText = i + 1;
                 div.onclick = () => {
-                    app.exam.currentIdx = i;
+                    app.idx = i;
                     renderQuestion();
                     toggleGrid();
                 };
-                container.appendChild(div);
+                content.appendChild(div);
             });
             modal.classList.add('open');
-        } else {
-            modal.classList.remove('open');
         }
     }
 
     function finishExam() {
-        clearInterval(app.exam.timer);
-        document.querySelector('.bottom-nav').classList.remove('hidden');
+        clearInterval(app.timer);
         document.getElementById('grid-modal').classList.remove('open');
-
-        // Puan Hesapla
-        const correctCount = app.exam.answers.filter(a => a && a.correct).length;
-        const score = (correctCount / app.exam.questions.length) * 100;
-
-        // Dashboard'a dön
+        document.querySelector('.bottom-nav').classList.remove('hidden');
+        
+        const correct = app.answers.filter(a => a && a.correct).length;
+        const score = (correct / app.questions.length) * 100;
+        
         switchTab('dashboard');
-
-        // Konfeti Patlat (Eğer başarılıysa)
-        if(score >= 60) {
-            triggerConfetti();
+        
+        if(score > 50) {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
-
-        // Kullanıcı istatistik güncelle (Demo fake veri itme)
-        app.user.stats.push(score);
-        app.user.stats.shift();
-        localStorage.setItem('sk_stats', JSON.stringify(app.user.stats));
-        renderChart();
-
-        alert(`SINAV TAMAMLANDI!\n\nPuanınız: ${Math.round(score)}\nDoğru Sayısı: ${correctCount}`);
+        
+        alert(`SINAV SONUCU\n\nPuan: ${score.toFixed(0)}\nDoğru: ${correct}\nYanlış: ${app.answers.filter(a => a && !a.correct).length}`);
+        
+        // Save stats (Mock)
+        updateChart(score);
     }
 
-    // --- GRAFİK (Chart.js) ---
-    function renderChart() {
+    // --- EXTRAS ---
+    function updateName(val) {
+        app.user = val;
+        localStorage.setItem('sk_user', val);
+        document.getElementById('profile-name').innerText = val;
+        document.getElementById('user-pill').innerText = '👤 ' + val;
+    }
+
+    let myChart;
+    function initChart() {
         const ctx = document.getElementById('miniChart').getContext('2d');
-        if(window.myChart) window.myChart.destroy();
-        
-        window.myChart = new Chart(ctx, {
+        myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['1.D', '2.D', '3.D', '4.D', '5.D', 'Son'],
+                labels: ['1', '2', '3', '4', '5'],
                 datasets: [{
                     label: 'Puan',
-                    data: app.user.stats,
+                    data: [50, 65, 55, 80, 70],
                     borderColor: '#06b6d4',
-                    backgroundColor: 'rgba(6, 182, 212, 0.15)',
-                    borderWidth: 3,
-                    tension: 0.4,
+                    backgroundColor: 'rgba(6,182,212,0.1)',
                     fill: true,
-                    pointBackgroundColor: '#fff'
+                    tension: 0.4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: {display: false} },
-                scales: {
-                    x: { display: false },
-                    y: { display: false, min: 0, max: 100 }
-                }
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { display: false } }
             }
         });
     }
-
-    // --- KULLANICI AYARLARI ---
-    function updateName(val) {
-        app.user.name = val;
-        localStorage.setItem('sk_name', val);
-        document.getElementById('profile-name-display').innerText = val;
+    
+    function updateChart(newScore) {
+        const data = myChart.data.datasets[0].data;
+        data.shift();
+        data.push(newScore);
+        myChart.update();
     }
-
-    function resetData() {
-        if(confirm('Tüm ilerlemen silinecek. Emin misin?')) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    function triggerConfetti() {
-        var duration = 3 * 1000;
-        var end = Date.now() + duration;
-
-        (function frame() {
-            confetti({
-                particleCount: 5,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#06b6d4', '#8b5cf6']
-            });
-            confetti({
-                particleCount: 5,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#06b6d4', '#8b5cf6']
-            });
-
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        }());
-    }
-
 </script>
 </body>
 </html>
