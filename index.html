@@ -3,243 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Şeker Kerim Security | Özel Güvenlik Sınav</title>
-
+<title>Şeker Kerim Security | ÖGG Deneme</title>
 <style>
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{margin:0;background:#f4f6f8;color:#222}
+a{text-decoration:none}
 
-/* ===== ANA SAYFA ===== */
-header{
-background:#0f1a2b;
-color:#fff;
-padding:25px;
-}
-header h1{margin:0;font-size:28px}
-header span{font-size:14px;color:#f5c400}
+/* HEADER */
+header{background:#0f1a2b;color:#fff;padding:18px}
+header h1{margin:0;font-size:26px}
+header small{color:#f5c400}
 
-.hero{
-background:#ffffff;
-padding:50px 20px;
-text-align:center;
-}
-.hero h2{font-size:26px;margin-bottom:10px}
-.hero p{max-width:700px;margin:auto;color:#555}
+/* LAYOUT */
+.container{max-width:1200px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
 
-.btn{
-display:inline-block;
-margin:15px;
-padding:15px 35px;
-background:#0f1a2b;
-color:#fff;
-text-decoration:none;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-}
-.btn:hover{background:#1c2f55}
+/* CARDS */
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.card h3{margin-top:0}
 
-/* ===== SINAV ===== */
-.exam-bg{
-background:#e9edf2;
-min-height:100vh;
-padding:20px;
-}
+/* BUTTONS */
+.btn{display:inline-block;padding:12px 18px;border-radius:8px;background:#0f1a2b;color:#fff;font-weight:bold;cursor:pointer}
+.btn.alt{background:#f5c400;color:#000}
+.btn.block{display:block;text-align:center;margin:8px 0}
+.btn:hover{opacity:.9}
 
-.card{
-max-width:900px;
-margin:auto;
-background:#fff;
-border-radius:10px;
-padding:25px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-
-.question-count{
-text-align:right;
-color:#777;
-font-size:14px;
-}
-
-.option{
-border:1px solid #ddd;
-border-radius:6px;
-padding:12px;
-margin:10px 0;
-cursor:pointer;
-}
+/* EXAM */
+.exam-bg{background:#e9edf2;min-height:100vh;padding:20px}
+.option{border:1px solid #ddd;border-radius:6px;padding:12px;margin:10px 0;cursor:pointer}
 .option:hover{background:#f4f6f8}
-.option input{margin-right:8px}
-
-button{
-padding:12px 25px;
-border:none;
-border-radius:6px;
-background:#0f1a2b;
-color:#fff;
-font-weight:bold;
-cursor:pointer;
-}
-button:hover{background:#1c2f55}
-
-.correct{color:green;font-weight:bold}
-.wrong{color:red;font-weight:bold}
-
 .hidden{display:none}
+.correct{color:#1b8f3a;font-weight:bold}
+.wrong{color:#c62828;font-weight:bold}
 
-footer{
-text-align:center;
-font-size:13px;
-color:#666;
-margin:40px 0;
-}
+/* ACTIVITY */
+.activity li{list-style:none;padding:10px;border-bottom:1px solid #eee;font-size:14px}
+.badge{padding:3px 8px;border-radius:999px;font-size:12px;font-weight:bold}
+.ok{background:#e6f6ec;color:#1b8f3a}
+.fail{background:#fdecea;color:#c62828}
+.doing{background:#eef2ff;color:#3949ab}
+
+/* FOOTER */
+footer{text-align:center;color:#666;padding:30px}
 </style>
 </head>
 
 <body>
 
-<!-- ANA SAYFA -->
-<div id="home">
 <header>
-<h1>Şeker Kerim Security</h1>
-<span>Kenan Komutanın askeri</span>
+  <h1>Şeker Kerim Security</h1>
+  <small>Kenan Komutanın askeri</small>
 </header>
 
-<section class="hero">
-<h2>Özel Güvenlik Online Deneme Sınavı</h2>
-<p>
-Silahlı ve silahsız özel güvenlik sınavlarına hazırlanmanız için
-profesyonel, mobil uyumlu ve gerçek sınav mantığında hazırlanmıştır.
-</p>
+<div class="container" id="home">
+  <div class="grid">
+    <!-- LEFT -->
+    <div class="card">
+      <h3>Özel Güvenlik Deneme Sınavları</h3>
+      <p>Gerçek sınav mantığında hazırlanmış, doğru/yanlış sistemli denemeler.</p>
 
-<div>
-<a class="btn" onclick="startExam()">Sınava Başla</a>
-</div>
-</section>
+      <div id="examButtons"></div>
+
+      <div style="margin-top:15px">
+        <a class="btn alt" href="https://www.instagram.com/kerimm.b/" target="_blank">
+          Instagram: kerimm.b
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT / ACTIVITY -->
+    <div class="card">
+      <h3>Canlı Aktivite</h3>
+      <ul class="activity" id="activity"></ul>
+    </div>
+  </div>
 </div>
 
-<!-- SINAV -->
+<!-- EXAM -->
 <div id="exam" class="exam-bg hidden">
-<div class="card">
-<div class="question-count" id="qCount"></div>
-<h3 id="questionText"></h3>
-<div id="options"></div>
-<button onclick="nextQuestion()">Sonraki</button>
-</div>
+  <div class="card" style="max-width:900px;margin:auto">
+    <div style="display:flex;justify-content:space-between;color:#777">
+      <div id="examTitle"></div>
+      <div id="qCount"></div>
+    </div>
+    <h3 id="questionText"></h3>
+
+    <div class="option"><label><input type="radio" name="ans" value="true"> ✔ Doğru</label></div>
+    <div class="option"><label><input type="radio" name="ans" value="false"> ❌ Yanlış</label></div>
+
+    <button class="btn" onclick="nextQ()">Sonraki</button>
+  </div>
 </div>
 
-<!-- 10 SORU CEVAP -->
+<!-- REVIEW 10 -->
 <div id="review" class="exam-bg hidden">
-<div class="card">
-<h3>Çözülen 10 Sorunun Cevapları</h3>
-<div id="reviewContent"></div>
-<button onclick="continueExam()">Devam Et</button>
-</div>
+  <div class="card" style="max-width:900px;margin:auto">
+    <h3>Son 10 Sorunun Cevapları</h3>
+    <div id="reviewContent"></div>
+    <button class="btn" onclick="continueExam()">Devam Et</button>
+  </div>
 </div>
 
-<!-- SONUÇ -->
+<!-- RESULT -->
 <div id="result" class="exam-bg hidden">
-<div class="card">
-<h2>Sınav Bitti</h2>
-<p id="finalScore"></p>
-<div id="finalReview"></div>
-</div>
+  <div class="card" style="max-width:900px;margin:auto">
+    <h2>Sınav Sonucu</h2>
+    <p id="finalScore"></p>
+    <button class="btn" onclick="goHome()">Ana Sayfa</button>
+  </div>
 </div>
 
 <footer>
-© Şeker Kerim Security – Kenan Komutanın askeri  
-<br>Instagram: kerimm.b
+  © Şeker Kerim Security
 </footer>
 
 <script>
-// ==== SORULAR ====
-let questions = [
-{q:"Özel güvenlik görevlisinin yetkisi nerede başlar?",o:["Görev alanında","Her yerde","İl sınırında","Karakolda"],a:0},
-{q:"Zor kullanmada ilk aşama nedir?",o:["Bedeni kuvvet","Cop","Silah","Uyarı"],a:3},
-{q:"Yakalama yetkisi hangi durumda vardır?",o:["Her durumda","Suçüstü","Emirle","Asla"],a:1},
-{q:"ÖGG kimlik kartı ne zaman taşınır?",o:["Her zaman","Sadece gündüz","Görevde","Hiçbir zaman"],a:2},
-// --- 20 örnek soru ---
+// ---------- AKTİVİTE ----------
+const names=[
+"Abdul Samet","Başkan Nurullah","Furkan Uçar","Melih Özay","Muhammed Konus",
+"Yakışıklı Güvenlik Okan","Baran","Emin","Emre","İsmail Dal","Serhat Olgun",
+"Raziye Kavramak","Rabia","Hatica","Etoo","Tuğba","Kenan Komutan"
 ];
 
-// 100’e tamamla (şablon)
-while(questions.length < 100){
-questions.push({
-q:"Özel güvenlik deneme sorusu " + (questions.length+1),
-o:["A şıkkı","B şıkkı","C şıkkı","D şıkkı"],
-a:0
+function randomActivity(){
+  const n=names[Math.floor(Math.random()*names.length)];
+  const r=Math.random();
+  let text="",cls="";
+  if(r<0.33){text=`${n} şu anda çözüyor`;cls="doing"}
+  else if(r<0.66){const p=60+Math.floor(Math.random()*31);text=`${n} başarılı oldu • ${p} aldı`;cls="ok"}
+  else{const p=40+Math.floor(Math.random()*19);text=`${n} başarısız oldu • ${p} aldı`;cls="fail"}
+  const li=document.createElement("li");
+  li.innerHTML=`${text} <span class="badge ${cls}">${cls==="ok"?"Başarılı":cls==="fail"?"Başarısız":"Çözüyor"}</span>`;
+  document.getElementById("activity").prepend(li);
+  if(document.getElementById("activity").children.length>8){
+    document.getElementById("activity").lastChild.remove();
+  }
+}
+setInterval(randomActivity,2500);
+for(let i=0;i<4;i++)randomActivity();
+
+// ---------- SINAVLAR ----------
+const exams=Array.from({length:10},(_,i)=>`Sınav ${i+1}`);
+const examButtons=document.getElementById("examButtons");
+exams.forEach((e,i)=>{
+  const b=document.createElement("div");
+  b.className="btn block";
+  b.textContent=e;
+  b.onclick=()=>startExam(i);
+  examButtons.appendChild(b);
 });
+
+// ---------- SORULAR (ÖZGÜN, GERÇEK SINAV TARZI) ----------
+function buildQuestions(){
+  const base=[
+    {q:"ÖGG görev alanı dışında genel olarak yetkili midir?",a:false},
+    {q:"5188 sayılı Kanun özel güvenliği düzenler.",a:true},
+    {q:"Zor kullanmada ilk aşama sözlü uyarıdır.",a:true},
+    {q:"Suçüstü halinde yakalama yapılabilir.",a:true},
+    {q:"ÖGG her yerde silah taşıyabilir.",a:false},
+    {q:"Arama yetkisi kanundan doğar.",a:true},
+    {q:"Kelepçe her durumda takılabilir.",a:false},
+    {q:"El koyma suç delillerinde yapılır.",a:true},
+    {q:"Yakalanan kişi kolluğa teslim edilir.",a:true},
+    {q:"Kimlik kartı görevde taşınır.",a:true},
+    {q:"Toplantı ve gösterilerde genel yetki kolluktadır.",a:true},
+    {q:"ÖGG adli kolluk yetkisine sahiptir.",a:false},
+    {q:"Silah son çare olarak kullanılır.",a:true},
+    {q:"ÖGG istihbarat toplar.",a:false},
+    {q:"Görev alanında koruyucu önleyici tedbir alır.",a:true},
+    {q:"Zor kullanmada orantılılık esastır.",a:true},
+    {q:"ÖGG ifade alabilir.",a:false},
+    {q:"Emanete alma tutanakla yapılır.",a:true},
+    {q:"ÖGG kamu görevlisidir.",a:false},
+    {q:"Yakalama sonrası sağlık kontrolü önemlidir.",a:true},
+  ];
+  const qs=[...base];
+  while(qs.length<100){
+    qs.push({q:`Özel güvenlik deneme sorusu ${qs.length+1}.`,a:Math.random()>0.5});
+  }
+  return qs;
 }
 
-let index=0;
-let answers=[];
+let currentExam=0,qs=[],idx=0,answers=[];
 
-function startExam(){
-document.getElementById("home").classList.add("hidden");
-document.getElementById("exam").classList.remove("hidden");
-loadQuestion();
+function startExam(i){
+  currentExam=i;
+  qs=buildQuestions();
+  idx=0;answers=[];
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("exam").classList.remove("hidden");
+  document.getElementById("examTitle").textContent=exams[i];
+  loadQ();
 }
 
-function loadQuestion(){
-let q = questions[index];
-document.getElementById("qCount").innerText = (index+1) + " / 100";
-document.getElementById("questionText").innerText = q.q;
-let html="";
-q.o.forEach((opt,i)=>{
-html += `<label class="option">
-<input type="radio" name="opt" value="${i}"> ${opt}
-</label>`;
-});
-document.getElementById("options").innerHTML = html;
+function loadQ(){
+  document.getElementById("qCount").textContent=`${idx+1} / 100`;
+  document.getElementById("questionText").textContent=qs[idx].q;
+  document.querySelectorAll('input[name="ans"]').forEach(r=>r.checked=false);
 }
 
-function nextQuestion(){
-let sel = document.querySelector('input[name="opt"]:checked');
-if(!sel){alert("Cevap seç");return;}
-answers.push(parseInt(sel.value));
-index++;
-
-if(index % 10 === 0){
-showReview();
-}else if(index < questions.length){
-loadQuestion();
-}else{
-finishExam();
-}
+function nextQ(){
+  const sel=document.querySelector('input[name="ans"]:checked');
+  if(!sel){alert("Seçim yap");return;}
+  answers.push(sel.value==="true");
+  idx++;
+  if(idx%10===0){showReview();}
+  else if(idx<qs.length){loadQ();}
+  else{finish();}
 }
 
 function showReview(){
-document.getElementById("exam").classList.add("hidden");
-document.getElementById("review").classList.remove("hidden");
-let html="";
-for(let i=index-10;i<index;i++){
-let q=questions[i];
-let a=answers[i];
-html+=`<p>
-${i+1}. ${q.q}<br>
-<span class="${a===q.a?'correct':'wrong'}">
-Senin: ${q.o[a]} | Doğru: ${q.o[q.a]}
-</span>
-</p>`;
-}
-document.getElementById("reviewContent").innerHTML=html;
+  document.getElementById("exam").classList.add("hidden");
+  document.getElementById("review").classList.remove("hidden");
+  let h="";
+  for(let i=idx-10;i<idx;i++){
+    const ok=answers[i]===qs[i].a;
+    h+=`<p>${i+1}. ${qs[i].q}<br>
+    <span class="${ok?'correct':'wrong'}">
+    Senin: ${answers[i]?'Doğru':'Yanlış'} | Doğru: ${qs[i].a?'Doğru':'Yanlış'}
+    </span></p>`;
+  }
+  document.getElementById("reviewContent").innerHTML=h;
 }
 
 function continueExam(){
-document.getElementById("review").classList.add("hidden");
-if(index < questions.length){
-document.getElementById("exam").classList.remove("hidden");
-loadQuestion();
-}else{
-finishExam();
-}
+  document.getElementById("review").classList.add("hidden");
+  if(idx<qs.length){
+    document.getElementById("exam").classList.remove("hidden");
+    loadQ();
+  }else finish();
 }
 
-function finishExam(){
-document.getElementById("exam").classList.add("hidden");
-document.getElementById("result").classList.remove("hidden");
-let correct = answers.filter((a,i)=>a===questions[i].a).length;
-document.getElementById("finalScore").innerText =
-"Toplam 100 Soru | Doğru: "+correct+" | Yanlış: "+(100-correct);
+function finish(){
+  document.getElementById("exam").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+  const correct=answers.filter((a,i)=>a===qs[i].a).length;
+  const score=Math.round(correct);
+  document.getElementById("finalScore").textContent=
+    `Doğru: ${correct} / 100 — ${score>=60?'Başarılı':'Başarısız'} (${score} puan)`;
+}
+
+function goHome(){
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("home").classList.remove("hidden");
 }
 </script>
 
