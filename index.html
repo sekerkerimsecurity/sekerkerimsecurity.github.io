@@ -17,11 +17,12 @@
 <style>
     :root {
         --bg-body: #0b1120;
-        --card-bg: rgba(30, 41, 59, 0.65);
+        --card-bg: rgba(30, 41, 59, 0.75);
         --glass-border: rgba(255, 255, 255, 0.08);
         --primary: #06b6d4; /* Cyan */
         --primary-glow: rgba(6, 182, 212, 0.5);
         --secondary: #8b5cf6; /* Violet */
+        --insta-grad: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
         --success: #10b981;
         --danger: #ef4444;
         --gold: #f59e0b;
@@ -43,12 +44,25 @@
         overscroll-behavior: none;
     }
 
-    /* --- DYNAMIC BACKGROUND --- */
+    /* --- DYNAMIC BACKGROUND & PARTICLES --- */
     .bg-mesh {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
         background: radial-gradient(circle at 0% 0%, rgba(6,182,212,0.15), transparent 40%),
                     radial-gradient(circle at 100% 100%, rgba(139,92,246,0.15), transparent 40%);
         filter: blur(40px);
+    }
+    
+    .particle {
+        position: absolute;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: floatUp linear infinite;
+        z-index: -1;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(100vh) scale(0); opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
 
     /* --- APP LAYOUT --- */
@@ -64,6 +78,8 @@
         flex: 1; overflow-y: auto; padding: 0 20px;
         scroll-behavior: smooth;
     }
+    /* Scrollbar Hide */
+    .scroll-view::-webkit-scrollbar { display: none; }
 
     .hidden { display: none !important; }
     .fade-in { animation: fadeIn 0.4s ease-out; }
@@ -78,7 +94,7 @@
     }
     .ticker-content {
         display: flex; white-space: nowrap;
-        animation: tickerScroll 45s linear infinite; /* İsimler çok olduğu için süre uzatıldı */
+        animation: tickerScroll 45s linear infinite;
     }
     .ticker-item {
         padding: 0 20px; font-size: 0.75rem; font-weight: 700; 
@@ -94,7 +110,9 @@
         border: 1px solid var(--glass-border);
         border-radius: 24px; padding: 20px; margin-bottom: 15px;
         box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
     }
+    .card:active { transform: scale(0.99); }
 
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .brand-title { font-size: 1.5rem; font-weight: 900; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -111,7 +129,6 @@
         min-height: 180px; display: flex; flex-direction: column; justify-content: center;
         position: relative; overflow: hidden;
     }
-    /* Swipe Indicators */
     .swipe-hint {
         position: absolute; top: 50%; transform: translateY(-50%);
         font-size: 2rem; color: rgba(255,255,255,0.1); pointer-events: none;
@@ -131,7 +148,6 @@
     .option:active { transform: scale(0.98); background: rgba(255,255,255,0.06); }
     .opt-char { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0; }
     
-    /* Correct/Wrong Styles */
     .option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
     .option.correct .opt-char { background: var(--success); color: #fff; }
     
@@ -140,10 +156,27 @@
     
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
+    /* --- INSTAGRAM BUTTON --- */
+    .insta-btn {
+        background: var(--insta-grad);
+        color: white; border: none; padding: 15px;
+        border-radius: 16px; font-weight: 700; font-size: 1rem;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        width: 100%; text-decoration: none; margin-top: 10px;
+        box-shadow: 0 10px 20px -5px rgba(220, 39, 67, 0.4);
+        position: relative; overflow: hidden;
+    }
+    .insta-btn::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shine 3s infinite;
+    }
+    @keyframes shine { 100% { left: 200%; } }
+
     /* --- BOTTOM NAV --- */
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; width: 100%;
-        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px);
+        background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
         border-top: 1px solid var(--glass-border);
         display: flex; justify-content: space-around;
         padding-top: 12px; padding-bottom: max(12px, var(--safe-bottom));
@@ -154,25 +187,28 @@
     .nav-item.active { color: var(--primary); transform: translateY(-2px); }
     .nav-item.active svg { filter: drop-shadow(0 0 8px var(--primary)); }
 
-    /* --- BUTTONS --- */
-    .btn-grad {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: #fff; border: none; padding: 16px; width: 100%;
-        border-radius: 16px; font-weight: 700; font-size: 1rem;
-        box-shadow: 0 10px 20px -5px var(--primary-glow);
-        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-grad:active { transform: scale(0.97); }
-
-    /* --- MODAL --- */
+    /* --- MODALS --- */
     .modal {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+        background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
         z-index: 100; visibility: hidden; opacity: 0; transition: 0.3s;
-        display: flex; align-items: flex-end;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px;
     }
     .modal.open { visibility: visible; opacity: 1; }
+
+    /* Result Card Specific */
+    .result-card {
+        background: #1e293b; width: 100%; max-width: 400px;
+        border-radius: 30px; padding: 30px; text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal.open .result-card { transform: scale(1); }
+
+    /* Grid Modal Specific */
     .modal-sheet {
+        position: absolute; bottom: 0; left: 0;
         background: #1e293b; width: 100%; border-radius: 24px 24px 0 0;
         padding: 25px 20px calc(20px + var(--safe-bottom)) 20px;
         transform: translateY(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -189,15 +225,25 @@
     .grid-cell.w { background: var(--danger); color: #fff; }
     .grid-cell.active { border: 2px solid #fff; }
 
+    /* --- BUTTONS --- */
+    .btn-grad {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: #fff; border: none; padding: 16px; width: 100%;
+        border-radius: 16px; font-weight: 700; font-size: 1rem;
+        box-shadow: 0 10px 20px -5px var(--primary-glow);
+        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-grad:active { transform: scale(0.97); }
+
 </style>
 </head>
 <body>
 
 <div class="bg-mesh"></div>
+<div id="particles-container"></div>
 
 <div class="ticker-container">
-    <div class="ticker-content" id="ticker-track">
-        </div>
+    <div class="ticker-content" id="ticker-track"></div>
     <div class="ticker-content" id="ticker-track-2"></div> 
 </div>
 
@@ -210,22 +256,22 @@
                 <div style="font-size:0.7rem; color:var(--primary); letter-spacing:2px; font-weight:700;">PLATINUM SECURITY</div>
             </div>
             <div style="text-align:right;">
-                 <div id="user-pill" style="background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:15px; font-size:0.7rem;">⭐ Misafir</div>
+                 <div id="user-pill" style="background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:15px; font-size:0.7rem; border:1px solid var(--glass-border);">⭐ Misafir</div>
             </div>
         </div>
 
         <div class="card">
-            <h2 style="margin:0 0 10px 0;">Hoşgeldin Asker 👋</h2>
-            <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:20px;">Sınava hazırlıkta en profesyonel yöntem.</p>
+            <h2 style="margin:0 0 10px 0;">Operasyon Başlasın 🚀</h2>
+            <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:20px;">Bugün hangi alanda kendini test etmek istersin?</p>
             
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <button onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.15); border:1px solid var(--primary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px;">🛡️</div>
+                <button onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.1); border:1px solid var(--primary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
+                    <div style="font-size:2rem; margin-bottom:5px; filter: drop-shadow(0 0 10px var(--primary));">🛡️</div>
                     <div style="font-weight:700;">Silahsız</div>
                     <div style="font-size:0.7rem; opacity:0.7;">100 Soru</div>
                 </button>
-                <button onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.15); border:1px solid var(--secondary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px;">🔫</div>
+                <button onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.1); border:1px solid var(--secondary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
+                    <div style="font-size:2rem; margin-bottom:5px; filter: drop-shadow(0 0 10px var(--secondary));">🔫</div>
                     <div style="font-weight:700;">Silahlı</div>
                     <div style="font-size:0.7rem; opacity:0.7;">125 Soru</div>
                 </button>
@@ -234,11 +280,19 @@
 
         <div class="card">
             <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <h3>İstatistikler</h3>
-                <span style="color:var(--primary); font-size:0.8rem;">Son 5 Sınav</span>
+                <h3>Performans Analizi</h3>
+                <span style="color:var(--primary); font-size:0.8rem; background:rgba(6,182,212,0.1); padding:3px 8px; border-radius:8px;">Son 5 Sınav</span>
             </div>
             <div style="height:120px;"><canvas id="miniChart"></canvas></div>
         </div>
+
+        <a href="https://www.instagram.com/kerimm.b" target="_blank" class="card" style="display:flex; align-items:center; gap:15px; text-decoration:none; color:white;">
+            <div style="background:var(--insta-grad); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">📸</div>
+            <div>
+                <div style="font-weight:700;">Beni Takip Et</div>
+                <div style="font-size:0.8rem; color:var(--text-dim);">@kerimm.b - Sorularını Sor!</div>
+            </div>
+        </a>
     </div>
 
     <div id="view-exam" class="scroll-view hidden">
@@ -248,7 +302,7 @@
                 <span style="font-size:1.2rem; font-weight:800;" id="q-progress">1 / 100</span>
             </div>
             <div class="streak-badge" id="streak-box">🔥 3 Seri!</div>
-            <div style="font-family:monospace; font-size:1.2rem; font-weight:700;" id="timer">120:00</div>
+            <div style="font-family:monospace; font-size:1.2rem; font-weight:700; color:var(--text);" id="timer">120:00</div>
         </div>
 
         <div class="card question-card" id="q-card">
@@ -269,14 +323,24 @@
 
     <div id="view-profile" class="scroll-view hidden fade-in">
         <div style="text-align:center; padding:30px 0;">
-             <div style="width:100px; height:100px; background:linear-gradient(45deg, #06b6d4, #8b5cf6); border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px var(--primary-glow);">😎</div>
+             <div style="width:100px; height:100px; background:linear-gradient(45deg, #06b6d4, #8b5cf6); border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px var(--primary-glow); border:4px solid rgba(255,255,255,0.1);">👮‍♂️</div>
              <h2 id="profile-name">İsimsiz</h2>
-             <p style="color:var(--text-dim);">Kıdemli Güvenlik Adayı</p>
+             <div id="profile-rank" style="color:var(--gold); font-weight:bold; font-size:0.9rem; margin-top:5px;">ACEMİ ADAY</div>
         </div>
 
         <div class="card">
-            <label style="font-size:0.8rem; color:var(--text-dim);">ADINI GÜNCELLE</label>
+            <label style="font-size:0.8rem; color:var(--text-dim);">KOD ADINI GÜNCELLE</label>
             <input type="text" id="name-input" placeholder="Ad Soyad..." style="width:100%; padding:15px; background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); color:#fff; border-radius:10px; margin-top:5px;" oninput="updateName(this.value)">
+        </div>
+
+        <div class="card">
+            <h3>İletişim & Destek</h3>
+            <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:15px;">Yeni sorular, tüyolar ve canlı yayınlar için:</p>
+            
+            <a href="https://www.instagram.com/kerimm.b" target="_blank" class="insta-btn" onclick="confetti({particleCount:50, origin:{y:0.8}})">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                Instagram'da Takip Et
+            </a>
         </div>
 
         <div class="card">
@@ -307,14 +371,54 @@
     <div class="modal-sheet">
         <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
             <h3>Soru Haritası</h3>
-            <button onclick="finishExam()" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:8px;">BİTİR</button>
+            <button onclick="finishExam()" style="background:var(--danger); color:#fff; border:none; padding:8px 20px; border-radius:10px; font-weight:bold;">SINAVI BİTİR</button>
         </div>
         <div class="grid-box" id="grid-content"></div>
     </div>
 </div>
 
+<div class="modal" id="result-modal">
+    <div class="result-card">
+        <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
+        <h2 style="margin-bottom:5px;">Sınav Tamamlandı!</h2>
+        <p id="res-msg" style="color:var(--text-dim); margin-bottom:20px;">Performansın hesaplandı.</p>
+        
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-bottom:20px;">
+            <div style="font-size:2.5rem; font-weight:900; color:var(--primary);" id="res-score">85</div>
+            <div style="font-size:0.8rem; letter-spacing:1px;">PUAN</div>
+        </div>
+
+        <div style="display:flex; justify-content:space-around; margin-bottom:25px; font-size:0.9rem;">
+            <div style="color:var(--success);">✅ <span id="res-correct">0</span> Doğru</div>
+            <div style="color:var(--danger);">❌ <span id="res-wrong">0</span> Yanlış</div>
+        </div>
+
+        <a href="https://www.instagram.com/kerimm.b" target="_blank" class="insta-btn" style="margin-bottom:10px;">
+            📸 Sonucu Paylaş (Instagram)
+        </a>
+        <button onclick="closeResult()" style="background:transparent; border:1px solid var(--text-dim); color:var(--text-dim); padding:12px; width:100%; border-radius:12px;">Kapat</button>
+    </div>
+</div>
+
 <script>
-    // --- VIP LISTESI (Kayan Yazı) ---
+    // --- PARTICLE BACKGROUND SYSTEM ---
+    function createParticles() {
+        const container = document.getElementById('particles-container');
+        for(let i=0; i<15; i++){
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 5 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            container.appendChild(p);
+        }
+    }
+    createParticles();
+
+    // --- VIP LISTESI ---
     const vipNames = [
         "ABDUL SAMET", "FURKAN UÇAR", "TUĞBA SUDEM", "İZNİKLİ GÜVENLİK", 
         "MELİH SAK", "MELİH ÖZAY", "MUHAMMED KONUS", "RAZİYE KAVRAMAK", 
@@ -323,7 +427,7 @@
         "HATİCE", "İSMAİL", "RABİA", "SERHAT OLGUN", "SİNAN", "YAĞMUR", "VE DİĞERLERİ..."
     ];
 
-    // --- SES MOTORU (Web Audio API - Dosyasız) ---
+    // --- AUDIO SYSTEM ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
         if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -349,7 +453,7 @@
         }
     }
 
-    // --- VERİ ---
+    // --- DATA ---
     const rawQuestions = [
         {c:"HUKUK", q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?", o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"], a:3},
         {c:"İLK YARDIM", q:"Bebeklerde bilinç kontrolü nasıl yapılır?", o:["Yanaklarına vurarak","Topuklarına vurarak","Sarsarak","Su dökerek","Seslenerek"], a:1},
@@ -363,30 +467,29 @@
         {c:"İLK YARDIM", q:"Turnike uygulaması hangi durumda yapılır?", o:["Burun kanamasında","Uzuv kopmasında","Baş ağrısında","Kırıklarda","Yanıklarda"], a:1}
     ];
 
-    // --- STATE ---
+    // --- APP STATE ---
     let app = {
         questions: [],
-        answers: [], // {given: index, correct: bool}
+        answers: [],
         idx: 0,
         timer: null,
         timeLeft: 0,
         streak: 0,
-        user: localStorage.getItem('sk_user') || 'Öğrenci'
+        user: localStorage.getItem('sk_user') || 'Aday',
+        rank: localStorage.getItem('sk_rank') || 'ACEMİ ADAY'
     };
 
     // --- INIT ---
     window.onload = () => {
-        // Ticker Doldur
+        // Ticker
         const track = document.getElementById('ticker-track');
         let html = '';
         vipNames.forEach(n => html += `<div class="ticker-item">⭐ ${n}</div>`);
         track.innerHTML = html;
-        document.getElementById('ticker-track-2').innerHTML = html; // Loop için
+        document.getElementById('ticker-track-2').innerHTML = html;
 
-        // Profil
-        document.getElementById('name-input').value = app.user;
-        document.getElementById('profile-name').innerText = app.user;
-        document.getElementById('user-pill').innerText = '👤 ' + app.user;
+        // Profile
+        updateUI();
 
         // Static List
         document.getElementById('static-vip-list').innerHTML = vipNames.join(' • ');
@@ -394,6 +497,13 @@
         initChart();
         setupSwipe();
     };
+
+    function updateUI() {
+        document.getElementById('name-input').value = app.user;
+        document.getElementById('profile-name').innerText = app.user;
+        document.getElementById('user-pill').innerText = '👤 ' + app.user;
+        document.getElementById('profile-rank').innerText = app.rank;
+    }
 
     // --- NAVIGATION ---
     function switchTab(tab) {
@@ -408,11 +518,9 @@
 
     // --- EXAM LOGIC ---
     function startExam(type) {
-        // Prepare Questions
         let pool = [];
         const count = type === 'silahsız' ? 100 : 125;
-        // Demo için soruları çoğaltıyorum
-        while(pool.length < count) pool.push(...rawQuestions);
+        while(pool.length < count) pool.push(...rawQuestions); // Demo çoğaltma
         pool = pool.slice(0, count).sort(() => Math.random() - 0.5);
 
         app.questions = pool;
@@ -454,7 +562,7 @@
             if(ans) {
                 if(i === q.a) cls += ' correct';
                 else if(i === ans.given) cls += ' wrong';
-                div.style.pointerEvents = 'none'; // Lock
+                div.style.pointerEvents = 'none';
             }
             div.className = cls;
             div.innerHTML = `<div class="opt-char">${String.fromCharCode(65+i)}</div> ${opt}`;
@@ -462,7 +570,6 @@
             list.appendChild(div);
         });
 
-        // Swipe Hints
         document.querySelector('.swipe-left').style.opacity = app.idx > 0 ? 0.3 : 0;
         document.querySelector('.swipe-right').style.opacity = app.idx < app.questions.length-1 ? 0.3 : 0;
     }
@@ -481,7 +588,6 @@
             if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
             hideStreak();
         }
-        
         renderQuestion();
     }
 
@@ -510,28 +616,19 @@
         }
     }
 
-    // --- SWIPE LOGIC (Dokunmatik Kaydırma) ---
     function setupSwipe() {
         let touchStartX = 0;
         let touchEndX = 0;
         const card = document.getElementById('q-card');
 
-        card.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
+        card.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
         card.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
-            handleGesture();
+            if (touchEndX < touchStartX - 50) nextQuestion();
+            if (touchEndX > touchStartX + 50) prevQuestion();
         });
-
-        function handleGesture() {
-            if (touchEndX < touchStartX - 50) nextQuestion(); // Sola kaydır (İleri)
-            if (touchEndX > touchStartX + 50) prevQuestion(); // Sağa kaydır (Geri)
-        }
     }
 
-    // --- GRID & FINISH ---
     function toggleGrid() {
         const modal = document.getElementById('grid-modal');
         const content = document.getElementById('grid-content');
@@ -561,29 +658,45 @@
     function finishExam() {
         clearInterval(app.timer);
         document.getElementById('grid-modal').classList.remove('open');
-        document.querySelector('.bottom-nav').classList.remove('hidden');
         
         const correct = app.answers.filter(a => a && a.correct).length;
         const score = (correct / app.questions.length) * 100;
         
-        switchTab('dashboard');
-        
-        if(score > 50) {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        }
-        
-        alert(`SINAV SONUCU\n\nPuan: ${score.toFixed(0)}\nDoğru: ${correct}\nYanlış: ${app.answers.filter(a => a && !a.correct).length}`);
-        
-        // Save stats (Mock)
+        // Update Chart
         updateChart(score);
+        
+        // Determine Rank
+        let msg = "Daha çok çalışmalısın.";
+        if(score >= 60) { msg = "Geçtin! Tebrikler."; app.rank = "UZMAN YARDIMCISI"; }
+        if(score >= 80) { msg = "Harika iş çıkardın!"; app.rank = "ÖZEL TİM"; }
+        if(score >= 90) { msg = "Mükemmel sonuç!"; app.rank = "👑 BAŞKOMİSER"; }
+        localStorage.setItem('sk_rank', app.rank);
+        updateUI();
+
+        // Show Custom Modal
+        document.getElementById('res-score').innerText = score.toFixed(0);
+        document.getElementById('res-correct').innerText = correct;
+        document.getElementById('res-wrong').innerText = app.answers.filter(a => a && !a.correct).length;
+        document.getElementById('res-msg').innerText = msg;
+        
+        document.getElementById('result-modal').classList.add('open');
+
+        if(score >= 60) {
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+        }
     }
 
-    // --- EXTRAS ---
+    function closeResult() {
+        document.getElementById('result-modal').classList.remove('open');
+        document.querySelector('.bottom-nav').classList.remove('hidden');
+        switchTab('dashboard');
+    }
+
+    // --- PROFILE ---
     function updateName(val) {
         app.user = val;
         localStorage.setItem('sk_user', val);
-        document.getElementById('profile-name').innerText = val;
-        document.getElementById('user-pill').innerText = '👤 ' + val;
+        updateUI();
     }
 
     let myChart;
@@ -597,16 +710,23 @@
                     label: 'Puan',
                     data: [50, 65, 55, 80, 70],
                     borderColor: '#06b6d4',
-                    backgroundColor: 'rgba(6,182,212,0.1)',
+                    backgroundColor: (ctx) => {
+                        const bg = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+                        bg.addColorStop(0, 'rgba(6,182,212,0.4)');
+                        bg.addColorStop(1, 'rgba(6,182,212,0)');
+                        return bg;
+                    },
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { display: false } }
+                scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } }
             }
         });
     }
