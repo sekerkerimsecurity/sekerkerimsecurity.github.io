@@ -3,298 +3,329 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>ŞekerKerim Platinum | Next-Gen Security Exam</title>
 <meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="ŞekerKerim Özel Güvenlik Sınav Sistemi">
+
+<title>ŞekerKerim Platinum | Next-Gen Security</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
     :root {
         --bg-body: #0f172a;
-        --card-bg: rgba(30, 41, 59, 0.6);
+        --card-bg: rgba(30, 41, 59, 0.7);
         --glass-border: rgba(255, 255, 255, 0.08);
         --primary: #06b6d4; /* Cyan */
-        --primary-glow: rgba(6, 182, 212, 0.5);
+        --primary-dark: #0891b2;
         --secondary: #8b5cf6; /* Violet */
-        --success: #10b981;
-        --danger: #ef4444;
+        --success: #10b981; /* Green */
+        --success-glow: rgba(16, 185, 129, 0.4);
+        --danger: #ef4444; /* Red */
+        --danger-glow: rgba(239, 68, 68, 0.4);
         --text: #f8fafc;
         --text-dim: #94a3b8;
+        --notch-padding: env(safe-area-inset-top);
+        --bottom-padding: env(safe-area-inset-bottom);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
+    * { 
+        box-sizing: border-box; 
+        -webkit-tap-highlight-color: transparent; 
+        outline: none; 
+        user-select: none; 
+        -webkit-user-select: none;
+    }
     
-    body {
+    html, body {
         margin: 0; padding: 0;
         font-family: 'Outfit', sans-serif;
         background: var(--bg-body);
         color: var(--text);
-        height: 100vh;
+        height: 100%;
+        width: 100%;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
+        overscroll-behavior: none; /* iOS Elastic scroll prevent */
     }
 
-    /* --- BACKGROUND FX --- */
+    /* --- ANIMATED BACKGROUND --- */
     .ambient-light {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-        background: radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.15), transparent 40%),
-                    radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.15), transparent 40%);
-        animation: pulseLight 10s infinite alternate;
+        background: 
+            radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12), transparent 40%),
+            radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12), transparent 40%);
+        animation: breath 8s ease-in-out infinite alternate;
     }
-    @keyframes pulseLight { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+    @keyframes breath { 0% { opacity: 0.6; transform: scale(1); } 100% { opacity: 1; transform: scale(1.05); } }
 
     /* --- LAYOUT --- */
     .app-viewport {
-        flex: 1;
+        display: flex; flex-direction: column;
+        height: 100%;
+        padding-top: max(20px, var(--notch-padding));
+        padding-bottom: calc(80px + var(--bottom-padding));
         overflow-y: auto;
-        padding: 20px;
-        padding-bottom: 90px; /* Space for navbar */
+        scroll-behavior: smooth;
+    }
+
+    .container {
+        padding: 0 20px;
         max-width: 600px;
         margin: 0 auto;
         width: 100%;
-        position: relative;
     }
 
     .hidden { display: none !important; }
-    .fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- HEADER --- */
+    /* --- HEADER & TICKER --- */
     header {
         display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 25px; padding-top: 10px;
+        margin-bottom: 20px;
     }
-    .brand h1 { margin: 0; font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand span { font-size: 0.7rem; color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    .brand h1 { 
+        margin: 0; font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; 
+        background: linear-gradient(to right, #fff, #cbd5e1); 
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+    .brand span { font-size: 0.65rem; color: var(--primary); font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; display: block; margin-top: 2px;}
     
-    .user-pill {
-        background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px;
-        font-size: 0.8rem; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 8px;
+    .rank-pill {
+        background: rgba(255,255,255,0.07); padding: 6px 14px; border-radius: 20px;
+        font-size: 0.75rem; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 6px;
+        backdrop-filter: blur(5px);
     }
+
+    /* Kayan Yazı Bandı */
+    .ticker-wrap {
+        width: 100%; overflow: hidden; background: rgba(6, 182, 212, 0.1); 
+        border-top: 1px solid rgba(6, 182, 212, 0.2); border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+        padding: 8px 0; margin-bottom: 20px; white-space: nowrap; position: relative;
+    }
+    .ticker { display: inline-block; animation: marquee 20s linear infinite; }
+    .ticker-item { display: inline-block; padding: 0 2rem; font-size: 0.85rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+    @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
     /* --- CARDS --- */
     .card {
         background: var(--card-bg);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
         border: 1px solid var(--glass-border);
-        border-radius: 24px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        border-radius: 24px; padding: 24px; margin-bottom: 20px;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.4);
     }
 
     /* --- EXAM UI --- */
-    .exam-progress {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+    .timer-bar {
+        width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; overflow: hidden;
     }
-    .circular-timer {
-        width: 50px; height: 50px; border-radius: 50%;
-        background: conic-gradient(var(--primary) 100%, rgba(255,255,255,0.1) 0%);
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 700; font-size: 0.8rem; position: relative;
+    .timer-fill {
+        height: 100%; background: var(--primary); width: 100%; transition: width 1s linear;
     }
-    .circular-timer::before {
-        content:''; position: absolute; width: 42px; height: 42px; background: var(--bg-body); border-radius: 50%;
-    }
-    .timer-text { position: relative; z-index: 2; }
 
-    .question-box { margin-bottom: 20px; min-height: 100px; }
-    .q-badge { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: inline-block;}
-    .q-text { font-size: 1.2rem; font-weight: 600; line-height: 1.5; }
-
+    .q-text { font-size: 1.15rem; font-weight: 600; line-height: 1.6; margin-top: 10px;}
+    
+    /* Gelişmiş Şık Tasarımı */
     .option {
         background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.05);
-        padding: 16px; border-radius: 16px; margin-bottom: 10px;
-        display: flex; align-items: center; cursor: pointer; transition: 0.2s;
-    }
-    .option:active { transform: scale(0.98); background: rgba(255,255,255,0.08); }
-    .opt-char { 
-        width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.1);
-        display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 18px; border-radius: 16px; margin-bottom: 12px;
+        display: flex; align-items: center; cursor: pointer; 
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative; overflow: hidden;
+        touch-action: manipulation;
     }
     
-    .option.selected { border-color: var(--primary); background: rgba(6, 182, 212, 0.1); }
-    .option.selected .opt-char { background: var(--primary); color: #000; }
+    .option:active { transform: scale(0.98); }
+    
+    .opt-char { 
+        width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1);
+        display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0;
+        font-size: 0.9rem; transition: 0.3s;
+    }
 
-    /* --- BOTTOM NAVIGATION (APP STYLE) --- */
+    /* Cevaplama Durumları (Correct/Wrong System) */
+    .option.correct {
+        background: rgba(16, 185, 129, 0.15); border-color: var(--success);
+        box-shadow: 0 0 15px var(--success-glow);
+    }
+    .option.correct .opt-char { background: var(--success); color: #fff; }
+
+    .option.wrong {
+        background: rgba(239, 68, 68, 0.15); border-color: var(--danger);
+        animation: shake 0.4s ease-in-out;
+    }
+    .option.wrong .opt-char { background: var(--danger); color: #fff; }
+
+    /* Cevap verildikten sonra diğer şıkların pasifleşmesi */
+    .options-locked .option { pointer-events: none; opacity: 0.6; }
+    .options-locked .option.correct, .options-locked .option.wrong { opacity: 1; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+    /* --- BOTTOM NAV --- */
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; width: 100%;
-        background: rgba(15, 23, 42, 0.9);
-        backdrop-filter: blur(20px);
+        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border-top: 1px solid var(--glass-border);
         display: flex; justify-content: space-around;
-        padding: 15px 0; z-index: 100;
-        padding-bottom: max(15px, env(safe-area-inset-bottom));
+        padding-top: 12px; padding-bottom: max(12px, var(--bottom-padding));
+        z-index: 100;
     }
     .nav-item {
-        color: var(--text-dim); text-align: center; font-size: 0.7rem; cursor: pointer; transition: 0.3s;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: var(--text-dim); font-size: 0.7rem; transition: 0.3s; width: 60px;
     }
-    .nav-item svg { display: block; margin: 0 auto 4px auto; width: 24px; height: 24px; fill: currentColor; }
-    .nav-item.active { color: var(--primary); transform: translateY(-2px); }
-    .nav-item.active svg { filter: drop-shadow(0 0 8px var(--primary-glow)); }
+    .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; transition: 0.3s; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active svg { transform: translateY(-3px); filter: drop-shadow(0 4px 6px var(--primary-glow)); }
 
-    /* --- GRID MODAL (OPTIK FORM) --- */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-        z-index: 200; display: flex; align-items: flex-end;
-        visibility: hidden; opacity: 0; transition: 0.3s;
-    }
-    .modal-overlay.open { visibility: visible; opacity: 1; }
-    
-    .modal-content {
-        background: #1e293b; width: 100%; border-radius: 24px 24px 0 0;
-        padding: 25px; max-height: 80vh; overflow-y: auto;
-        transform: translateY(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .modal-overlay.open .modal-content { transform: translateY(0); }
-
-    .grid-questions {
-        display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px;
-    }
-    .grid-item {
-        aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 8px;
-        display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 600;
-        cursor: pointer;
-    }
-    .grid-item.filled { background: var(--primary); color: #000; }
-    .grid-item.current { border: 2px solid #fff; }
-
-    /* --- ACTION BUTTONS --- */
+    /* --- BUTTONS --- */
     .btn-action {
-        width: 100%; padding: 18px; border-radius: 18px; border: none;
+        width: 100%; padding: 18px; border-radius: 16px; border: none;
         font-size: 1rem; font-weight: 700; color: #fff; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 10px;
-        margin-top: 15px; transition: 0.3s;
+        transition: 0.3s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
-    .btn-glow {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        box-shadow: 0 10px 30px -5px var(--primary-glow);
-    }
+    .btn-glow { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
     .btn-glow:active { transform: scale(0.97); }
-
-    /* --- STATS CHARTS --- */
-    .chart-container { position: relative; height: 200px; width: 100%; margin-top: 15px; }
+    
+    /* --- GRID MODAL --- */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+        z-index: 200; visibility: hidden; opacity: 0; transition: 0.3s;
+        display: flex; align-items: flex-end;
+    }
+    .modal-overlay.open { visibility: visible; opacity: 1; }
+    .modal-content {
+        background: #1e293b; width: 100%; border-radius: 30px 30px 0 0;
+        padding: 30px 20px calc(20px + var(--bottom-padding)) 20px;
+        max-height: 85vh; overflow-y: auto;
+        transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    .modal-overlay.open .modal-content { transform: translateY(0); }
+    
+    .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .grid-item {
+        aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;
+    }
+    .grid-item.correct { background: var(--success); color: #fff; }
+    .grid-item.wrong { background: var(--danger); color: #fff; }
+    .grid-item.current { border: 2px solid #fff; }
 </style>
 </head>
 <body>
 
 <div class="ambient-light"></div>
 
+<div class="ticker-wrap">
+    <div class="ticker">
+        <div class="ticker-item">⭐ ŞEKERKERİM PLATINUM VIP ÜYELER:</div>
+        <div class="ticker-item">ABDUL SAMET</div>
+        <div class="ticker-item">SUDEM</div>
+        <div class="ticker-item">POLİS ABİ</div>
+        <div class="ticker-item">KENAN KOMUTAN</div>
+        <div class="ticker-item">VE İŞTE DİĞERLERİ...</div>
+        <div class="ticker-item">⭐ ŞEKERKERİM PLATINUM VIP ÜYELER:</div>
+        <div class="ticker-item">ABDUL SAMET</div>
+        <div class="ticker-item">SUDEM</div>
+        <div class="ticker-item">POLİS ABİ</div>
+    </div>
+</div>
+
 <div class="app-viewport">
-    <header>
-        <div class="brand">
-            <h1>ŞEKERKERIM</h1>
-            <span>PLATINUM SECURITY</span>
-        </div>
-        <div class="user-pill" id="user-rank">
-            ⭐ <span>Çaylak</span>
-        </div>
-    </header>
+    
+    <div id="view-dashboard" class="container fade-in">
+        <header>
+            <div class="brand">
+                <h1>ŞEKERKERIM</h1>
+                <span>NEXT-GEN SECURITY</span>
+            </div>
+            <div class="rank-pill" id="user-rank">🎖️ Çaylak</div>
+        </header>
 
-    <div id="view-dashboard" class="fade-in">
         <div class="card">
-            <h2 style="margin-top:0;">Hoşgeldin Asker 👋</h2>
-            <p style="color:var(--text-dim); font-size:0.9rem;">Bugün güvenlik kariyerin için ne yapacaksın?</p>
+            <h2 style="margin-top:0;">Hazır mısın? 🛡️</h2>
+            <p style="color:var(--text-dim); font-size:0.95rem;">Anlık geri bildirimli, profesyonel sınav simülasyonu.</p>
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
-                <div onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.15); padding:15px; border-radius:16px; border:1px solid var(--primary); cursor:pointer; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px;">🛡️</div>
-                    <div style="font-weight:700; color:var(--primary);">Silahsız</div>
-                    <div style="font-size:0.7rem; opacity:0.7;">100 Soru • 120 Dk</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:25px;">
+                <div onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.1); padding:20px; border-radius:20px; border:1px solid var(--primary); cursor:pointer; text-align:center; transition:0.2s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-size:2.2rem; margin-bottom:8px;">🛡️</div>
+                    <div style="font-weight:700; color:var(--primary);">SİLAHSIZ</div>
+                    <div style="font-size:0.75rem; opacity:0.7;">100 Soru • Eğitim Modu</div>
                 </div>
-                <div onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.15); padding:15px; border-radius:16px; border:1px solid var(--secondary); cursor:pointer; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px;">🔫</div>
-                    <div style="font-weight:700; color:var(--secondary);">Silahlı</div>
-                    <div style="font-size:0.7rem; opacity:0.7;">125 Soru • 150 Dk</div>
+                <div onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.1); padding:20px; border-radius:20px; border:1px solid var(--secondary); cursor:pointer; text-align:center; transition:0.2s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">
+                    <div style="font-size:2.2rem; margin-bottom:8px;">🔫</div>
+                    <div style="font-weight:700; color:var(--secondary);">SİLAHLI</div>
+                    <div style="font-size:0.75rem; opacity:0.7;">125 Soru • Eğitim Modu</div>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <div style="display:flex; justify-content:space-between;">
-                <h3>Son Performans</h3>
-                <span style="font-size:0.8rem; color:var(--primary); cursor:pointer;" onclick="switchTab('stats')">Detaylar →</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0;">Haftalık Performans</h3>
+                <span style="font-size:0.8rem; color:var(--primary);">Detaylar →</span>
             </div>
-            <canvas id="miniHistoryChart" height="100"></canvas>
+            <canvas id="miniChart" height="120"></canvas>
         </div>
     </div>
 
-    <div id="view-exam" class="hidden">
-        <div class="exam-progress">
-            <div style="display:flex; flex-direction:column;">
-                <span style="font-size:0.7rem; color:var(--text-dim);">İLERLEME</span>
-                <span style="font-size:1.1rem; font-weight:700;" id="q-counter">1 / 100</span>
+    <div id="view-exam" class="container hidden">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
+            <div>
+                <span style="font-size:0.75rem; color:var(--text-dim); letter-spacing:1px;">SORU</span>
+                <div style="font-size:1.5rem; font-weight:800;" id="q-counter">1<span style="font-size:1rem; color:var(--text-dim); font-weight:500;">/100</span></div>
             </div>
-            <div class="circular-timer" id="timer-circle">
-                <span class="timer-text" id="timer-text">120</span>
+            <div style="text-align:right;">
+                <div style="font-family:monospace; font-size:1.2rem; font-weight:700;" id="timer-text">120:00</div>
             </div>
-            <button onclick="toggleGrid()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:#fff; padding:8px 12px; border-radius:10px; cursor:pointer;">
-                ☰
-            </button>
         </div>
+        
+        <div class="timer-bar"><div class="timer-fill" id="timer-bar"></div></div>
 
-        <div class="card">
-            <div class="q-badge" id="q-category">TEMEL HUKUK</div>
+        <div class="card" style="margin-top:20px; min-height:160px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:6px; font-size:0.65rem; color:var(--text-dim); align-self:flex-start; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;" id="q-category">KATEGORİ</div>
             <div class="q-text" id="q-text">Soru yükleniyor...</div>
         </div>
 
         <div id="options-container">
             </div>
 
-        <div style="display:flex; gap:15px; margin-top:20px;">
-            <button onclick="prevQuestion()" class="btn-action" style="background:#334155;">⬅ Önceki</button>
-            <button onclick="nextQuestion()" class="btn-action btn-glow">Sonraki ➡</button>
+        <div style="display:flex; gap:15px; margin-top:25px; padding-bottom:30px;">
+            <button onclick="toggleGrid()" style="flex:1; background:rgba(255,255,255,0.1); padding:15px; border-radius:14px; border:none; color:#fff;">📋 Liste</button>
+            <button onclick="nextQuestion()" class="btn-action btn-glow" style="flex:2;">Sonraki Soru ➡</button>
         </div>
     </div>
 
-    <div id="view-stats" class="hidden fade-in">
-        <h2 style="margin-bottom:20px;">Performans Analizi</h2>
-        
-        <div class="card">
-            <h3>Konu Başarısı</h3>
-            <div class="chart-container">
-                <canvas id="topicChart"></canvas>
-            </div>
+    <div id="view-profile" class="container hidden fade-in">
+        <div style="text-align:center; margin:40px 0;">
+            <div style="width:110px; height:110px; margin:0 auto 20px; border-radius:50%; background:linear-gradient(45deg, var(--primary), var(--secondary)); display:flex; align-items:center; justify-content:center; font-size:3rem; box-shadow:0 0 30px var(--secondary);">😎</div>
+            <h2 id="profile-name-display">Misafir Kullanıcı</h2>
+            <p style="color:var(--text-dim);">Abdul Samet'in Devresi</p>
         </div>
 
         <div class="card">
-            <h3>Sınav Geçmişi</h3>
-            <ul id="history-list" style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
-                <li style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--text-dim);">Henüz sınav verisi yok.</li>
-            </ul>
+            <label style="font-size:0.8rem; color:var(--text-dim); margin-bottom:8px; display:block;">PROFİL AYARLARI</label>
+            <input type="text" id="name-input" placeholder="Adını Buraya Yaz" style="width:100%; padding:16px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; font-size:1rem;" oninput="updateName(this.value)">
+            <button class="btn-action" style="background:#333; margin-top:15px;" onclick="resetData()">Verileri Sıfırla</button>
         </div>
-    </div>
-
-    <div id="view-profile" class="hidden fade-in">
-        <div style="text-align:center; margin-bottom:30px;">
-            <div style="width:100px; height:100px; background:linear-gradient(135deg, var(--primary), var(--secondary)); border-radius:50%; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px var(--primary-glow);">😎</div>
-            <h2 id="profile-name">İsimsiz Kahraman</h2>
-            <p style="color:var(--text-dim);">Kenan Komutan'ın Seçkin Öğrencisi</p>
-        </div>
-
-        <div class="card">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; color:var(--text-dim);">İSMİNİZİ GÜNCELLEYİN</label>
-            <input type="text" id="name-input" placeholder="Adınızı yazın..." style="width:100%; padding:15px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:12px;" oninput="updateName(this.value)">
-        </div>
-
-        <a href="https://www.instagram.com/kerimm.b/" target="_blank" class="btn-action" style="background: linear-gradient(45deg, #f09433, #bc1888);">
-            Instagram'da Takip Et
-        </a>
     </div>
 
 </div>
 
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
-        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         Anasayfa
-    </div>
-    <div class="nav-item" onclick="switchTab('stats')" id="nav-stats">
-        <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-        Analiz
     </div>
     <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
         <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -304,299 +335,297 @@
 
 <div class="modal-overlay" id="grid-modal" onclick="if(event.target === this) toggleGrid()">
     <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center;">
             <h3>Soru Haritası</h3>
-            <button onclick="finishExam()" style="background:var(--danger); border:none; color:#fff; padding:8px 15px; border-radius:8px; font-weight:bold;">SINAVI BİTİR</button>
+            <button onclick="finishExam()" style="background:var(--danger); border:none; color:#fff; padding:8px 16px; border-radius:8px; font-weight:700;">TESTİ BİTİR</button>
         </div>
-        <div class="grid-questions" id="grid-container">
-            </div>
+        <div class="grid-container" id="grid-container"></div>
     </div>
 </div>
 
 <script>
-    // --- DATABASE ---
-    // Konu kategorileri ile genişletilmiş veri
-    const categories = ["Hukuk", "Silah", "İletişim", "Güvenlik Tedbirleri", "İlk Yardım"];
+    // --- VERİ TABANI (Sorular) ---
     const rawQuestions = [
-        {c:"Hukuk", q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"],a:3},
-        {c:"Hukuk", q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanır?",o:["Her vatandaşa","Şüpheli davranış varsa","Sadece amirin emriyle","Toplu alanlarda","Mesai dışında"],a:1},
-        {c:"Silah", q:"Aşağıdakilerden hangisi silah kullanma şartlarından biridir?",o:["Şüphelenmek","Amirin emri","Meşru savunma","Kimlik sormak","Caydırıcılık"],a:2},
-        {c:"Güvenlik Tedbirleri", q:"Kelepçe takma ile ilgili hangisi doğrudur?",o:["Her yakalanana takılır","Direnç gösterene takılır","Kimliği olmayana takılır","Şikayetçiye takılır","Tanığa takılır"],a:1},
-        {c:"Hukuk", q:"Özel güvenlik görevlisinin çalışma izni kaç yılda bir yenilenir?",o:["1","2","3","4","5"],a:4},
-        {c:"İletişim", q:"Aşağıdakilerden hangisi iletişimde empatiyi ifade eder?",o:["Karşıyı susturmak","Karşıyı anlamaya çalışmak","Emir vermek","Yüksek sesle konuşmak","Göz teması kurmamak"],a:1},
-        {c:"Güvenlik Tedbirleri", q:"Olay yerinde ilk yapılması gereken nedir?",o:["Basına bilgi vermek","Şüpheliyi dövmek","Olay yerini koruma altına almak","Tanıkları uzaklaştırmak","Delilleri toplamak"],a:2},
-        {c:"Hukuk", q:"Özel güvenlik görevlisi hangi durumda üst araması yapabilir?",o:["Her zaman","Şüphe varsa","Kanunda belirtilen hallerde","Amirin isteğiyle","Vatandaş isterse"],a:2},
-        {c:"Silah", q:"Silahlı özel güvenlik görevlisi hangi durumda silahını kullanabilir?",o:["Keyfi kullanım","Meşru savunma","Sürekli taşımak","Görev bitiminde","Amirin isteği"],a:1},
-        {c:"İlk Yardım", q:"Temel yaşam desteği kime uygulanır?",o:["Her hastaya","Solunumu ve kalbi durmuş kişiye","Baygın kişiye","Kanaması olana","Şoktaki kişiye"],a:1},
-        {c:"İletişim", q:"Etkili iletişimde beden dili yüzde kaç etkilidir?",o:["%10","%30","%55","%70","%90"],a:2},
-        {c:"Silah", q:"Fişek yatağında fişek olup olmadığını gösteren parça hangisidir?",o:["Tetik","Horoz","İğne","Tırnak","Gez"],a:3}
+        {c:"HUKUK", q:"5188 sayılı Kanuna göre, özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?", o:["Yakalama", "Emanete alma", "İfade alma", "Zor kullanma", "Kimlik sorma"], a:2},
+        {c:"İLK YARDIM", q:"Yetişkin bir insanda dakika solunum sayısı normalde ne kadardır?", o:["12-20", "20-25", "8-10", "30-40", "50-60"], a:0},
+        {c:"SİLAH", q:"Fişek yatağında fişek olup olmadığını gösteren emniyet tertibatı hangisidir?", o:["Kabza emniyeti", "İğne emniyeti", "Horoz emniyeti", "İkaz pimi (Tırnak)", "Şarjör emniyeti"], a:3},
+        {c:"İLETİŞİM", q:"İletişimde 'Empati' nedir?", o:["Sempati duymak", "Kendini karşısındakinin yerine koymak", "Öğüt vermek", "Eleştirmek", "Dinlememek"], a:1},
+        {c:"GÜVENLİK", q:"Kontrol noktasından geçen ziyaretçinin üzerinde silah tespit edilirse ne yapılır?", o:["El konulur", "Emanete alınır", "Polise haber verilir", "Geri gönderilir", "Şahıs dövülür"], a:2},
+        {c:"YANGIN", q:"B sınıfı (Sıvı) yangınlarda en etkili söndürücü madde nedir?", o:["Su", "Köpük", "Kum", "Bor", "Toprak"], a:1},
+        {c:"SİLAH", q:"Tabancada iğneye darbe yaparak patlamayı gerçekleştiren parça hangisidir?", o:["Tetik", "Horoz", "Namlu", "Gez", "Arpacık"], a:1},
+        {c:"HUKUK", q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?", o:["2", "3", "4", "5", "10"], a:3},
+        {c:"KORUMA", q:"Önemli kişi koruma (VIP) hizmetlerinde temel amaç nedir?", o:["Saldırganı yakalamak", "VIP'i kaçırmak/uzaklaştırmak", "Çatışmak", "Yolu kapatmak", "Kalabalığı dağıtmak"], a:1},
+        {c:"TEKNİK", q:"X-Ray cihazı temel olarak neyin tespitinde kullanılır?", o:["Patlayıcı", "Uyuşturucu", "Metal", "Plastik", "Sıvı"], a:2}
     ];
 
     // --- STATE MANAGEMENT ---
-    let appState = {
-        currentView: 'dashboard',
+    let app = {
         exam: {
             active: false,
             questions: [],
-            answers: [], // Array of indices (null if unanswered)
-            currentIndex: 0,
-            timeRemaining: 0,
-            timerId: null
+            answers: [], // { given: index, correct: bool }
+            currentIdx: 0,
+            timeLeft: 0,
+            timer: null
         },
         user: {
-            name: localStorage.getItem('userName') || 'ÖGG Adayı',
-            history: JSON.parse(localStorage.getItem('userHistory')) || []
+            name: localStorage.getItem('sk_name') || 'Misafir',
+            stats: JSON.parse(localStorage.getItem('sk_stats')) || [10, 40, 30, 70, 50, 90]
         }
     };
 
-    // --- INITIALIZATION ---
+    // --- BAŞLATMA ---
     window.onload = () => {
-        document.getElementById('name-input').value = appState.user.name;
-        document.getElementById('profile-name').innerText = appState.user.name;
-        updateRank();
-        renderHistoryChart();
+        document.getElementById('profile-name-display').innerText = app.user.name;
+        document.getElementById('name-input').value = app.user.name;
+        renderChart();
     };
 
-    // --- NAVIGATION ---
-    function switchTab(tabName) {
-        // UI Updates
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(`nav-${tabName}`).classList.add('active');
+    // --- NAVİGASYON ---
+    function switchTab(tab) {
+        // Alt menü aktifliği
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(`nav-${tab}`).classList.add('active');
         
-        // View Updates
-        ['dashboard', 'exam', 'stats', 'profile'].forEach(v => {
-            document.getElementById(`view-${v}`).classList.add('hidden');
+        // Ekran değişimi
+        ['dashboard', 'exam', 'profile'].forEach(v => {
+            const el = document.getElementById(`view-${v}`);
+            if(v === tab) {
+                el.classList.remove('hidden');
+                if(tab === 'dashboard') renderChart(); // Chart refresh
+            } else {
+                el.classList.add('hidden');
+            }
         });
-        document.getElementById(`view-${tabName}`).classList.remove('hidden');
-
-        if(tabName === 'stats') renderStats();
     }
 
-    // --- EXAM LOGIC ---
+    // --- SINAV MOTORU ---
     function startExam(type) {
-        // Generate Questions
-        let count = type === 'silahsız' ? 100 : 125;
+        // Demo için soruları çoğalt
         let pool = [];
-        while(pool.length < count) pool.push(...rawQuestions); // Duplicate for demo
+        const count = type === 'silahsız' ? 10 : 15; // Demo için kısa tuttum, 100 yaparsan array duplicate et
+        while(pool.length < count) pool.push(...rawQuestions);
         pool = pool.slice(0, count).sort(() => Math.random() - 0.5);
 
-        appState.exam = {
+        app.exam = {
             active: true,
             questions: pool,
             answers: new Array(count).fill(null),
-            currentIndex: 0,
-            timeRemaining: (type === 'silahsız' ? 120 : 150) * 60,
-            timerId: setInterval(timerTick, 1000)
+            currentIdx: 0,
+            timeLeft: (type === 'silahsız' ? 120 : 150) * 60,
+            timer: setInterval(tick, 1000)
         };
 
-        // Switch View
-        document.getElementById('view-dashboard').classList.add('hidden');
-        document.getElementById('view-exam').classList.remove('hidden');
-        // Hide nav bar during exam to focus
-        document.querySelector('.bottom-nav').classList.add('hidden');
-
+        document.querySelector('.bottom-nav').classList.add('hidden'); // Sınavda menüyü gizle
+        switchTab('exam');
         renderQuestion();
-        updateGrid();
     }
 
-    function timerTick() {
-        appState.exam.timeRemaining--;
-        const m = Math.floor(appState.exam.timeRemaining / 60);
-        document.getElementById('timer-text').innerText = m;
+    function tick() {
+        if(app.exam.timeLeft <= 0) { finishExam(); return; }
+        app.exam.timeLeft--;
         
-        // Circular progress visual
-        const total = 120 * 60; 
-        const pct = (appState.exam.timeRemaining / total) * 100;
-        document.getElementById('timer-circle').style.background = 
-            `conic-gradient(var(--primary) ${pct}%, rgba(255,255,255,0.1) 0%)`;
-
-        if(appState.exam.timeRemaining <= 0) finishExam();
+        // Süre Formatı
+        const m = Math.floor(app.exam.timeLeft / 60);
+        const s = app.exam.timeLeft % 60;
+        document.getElementById('timer-text').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+        
+        // Progress Bar
+        const totalTime = 120 * 60;
+        const pct = (app.exam.timeLeft / totalTime) * 100;
+        document.getElementById('timer-bar').style.width = pct + '%';
+        
+        if(pct < 20) document.getElementById('timer-bar').style.background = 'var(--danger)';
     }
 
     function renderQuestion() {
-        const q = appState.exam.questions[appState.exam.currentIndex];
-        const userAns = appState.exam.answers[appState.exam.currentIndex];
+        const q = app.exam.questions[app.exam.currentIdx];
+        const status = app.exam.answers[app.exam.currentIdx]; // null or {given:X, correct:bool}
 
-        document.getElementById('q-counter').innerText = `${appState.exam.currentIndex + 1} / ${appState.exam.questions.length}`;
-        document.getElementById('q-category').innerText = q.c.toUpperCase();
+        document.getElementById('q-counter').innerHTML = `${app.exam.currentIdx + 1}<span style="font-size:1rem; color:var(--text-dim); font-weight:500;">/${app.exam.questions.length}</span>`;
+        document.getElementById('q-category').innerText = q.c;
         document.getElementById('q-text').innerText = q.q;
 
         const container = document.getElementById('options-container');
         container.innerHTML = '';
+        container.className = status ? 'options-locked' : '';
 
         q.o.forEach((opt, idx) => {
             const div = document.createElement('div');
-            div.className = `option ${userAns === idx ? 'selected' : ''}`;
+            let className = 'option';
+            
+            // Eğer cevap verildiyse renklendir
+            if(status) {
+                if(idx === q.a) className += ' correct'; // Doğru olan her zaman yeşil yanar
+                if(idx === status.given && !status.correct) className += ' wrong'; // Yanlış seçtiyse kırmızı
+            }
+
+            div.className = className;
             div.innerHTML = `<div class="opt-char">${String.fromCharCode(65+idx)}</div> ${opt}`;
-            div.onclick = () => selectOption(idx);
+            
+            // Tıklama olayları
+            if(!status) {
+                div.onclick = () => checkAnswer(idx, q.a);
+            }
+            
             container.appendChild(div);
         });
     }
 
-    function selectOption(idx) {
-        appState.exam.answers[appState.exam.currentIndex] = idx;
-        renderQuestion(); // Re-render to show selection
+    // --- DOĞRU/YANLIŞ SİSTEMİ (HEART OF THE SYSTEM) ---
+    function checkAnswer(selectedIdx, correctIdx) {
+        const isCorrect = selectedIdx === correctIdx;
+        
+        // State Kaydet
+        app.exam.answers[app.exam.currentIdx] = {
+            given: selectedIdx,
+            correct: isCorrect
+        };
+
+        // Haptik Geri Bildirim (Android Titreşim)
+        if(navigator.vibrate) {
+            if(isCorrect) navigator.vibrate(50); // Kısa titreşim
+            else navigator.vibrate([100, 50, 100]); // İki kere titret (Hata)
+        }
+
+        renderQuestion(); // UI Güncelle (Renklendir)
     }
 
     function nextQuestion() {
-        if(appState.exam.currentIndex < appState.exam.questions.length - 1) {
-            appState.exam.currentIndex++;
+        if(app.exam.currentIdx < app.exam.questions.length - 1) {
+            app.exam.currentIdx++;
             renderQuestion();
+        } else {
+            // Son soruda ise listeyi aç
+            toggleGrid();
         }
     }
 
-    function prevQuestion() {
-        if(appState.exam.currentIndex > 0) {
-            appState.exam.currentIndex--;
-            renderQuestion();
-        }
-    }
-
-    // --- GRID / OPTIK FORM ---
+    // --- GRID MENU ---
     function toggleGrid() {
         const modal = document.getElementById('grid-modal');
-        const isOpen = modal.classList.contains('open');
+        const container = document.getElementById('grid-container');
         
-        if(!isOpen) {
-            updateGrid();
+        if(!modal.classList.contains('open')) {
+            // Render Grid
+            container.innerHTML = '';
+            app.exam.answers.forEach((ans, i) => {
+                const div = document.createElement('div');
+                let cls = 'grid-item';
+                if(i === app.exam.currentIdx) cls += ' current';
+                if(ans) cls += ans.correct ? ' correct' : ' wrong';
+                
+                div.className = cls;
+                div.innerText = i + 1;
+                div.onclick = () => {
+                    app.exam.currentIdx = i;
+                    renderQuestion();
+                    toggleGrid();
+                };
+                container.appendChild(div);
+            });
             modal.classList.add('open');
         } else {
             modal.classList.remove('open');
         }
     }
 
-    function updateGrid() {
-        const container = document.getElementById('grid-container');
-        container.innerHTML = '';
-        appState.exam.answers.forEach((ans, i) => {
-            const div = document.createElement('div');
-            div.className = `grid-item ${ans !== null ? 'filled' : ''} ${i === appState.exam.currentIndex ? 'current' : ''}`;
-            div.innerText = i + 1;
-            div.onclick = () => {
-                appState.exam.currentIndex = i;
-                renderQuestion();
-                toggleGrid(); // Close modal
-            };
-            container.appendChild(div);
-        });
-    }
-
-    // --- RESULTS & LOGGING ---
     function finishExam() {
-        clearInterval(appState.exam.timerId);
-        document.getElementById('grid-modal').classList.remove('open');
+        clearInterval(app.exam.timer);
         document.querySelector('.bottom-nav').classList.remove('hidden');
+        document.getElementById('grid-modal').classList.remove('open');
 
-        // Calculate Score
-        let correct = 0;
-        appState.exam.questions.forEach((q, i) => {
-            if(appState.exam.answers[i] === q.a) correct++;
-        });
+        // Puan Hesapla
+        const correctCount = app.exam.answers.filter(a => a && a.correct).length;
+        const score = (correctCount / app.exam.questions.length) * 100;
 
-        // Save to History
-        const result = {
-            date: new Date().toLocaleDateString(),
-            score: correct,
-            total: appState.exam.questions.length
-        };
-        appState.user.history.push(result);
-        localStorage.setItem('userHistory', JSON.stringify(appState.user.history));
-
-        alert(`Sınav Bitti!\nPuanınız: ${correct} / ${appState.exam.questions.length}`);
-        
-        updateRank();
+        // Dashboard'a dön
         switchTab('dashboard');
-        renderHistoryChart(); // Refresh charts
+
+        // Konfeti Patlat (Eğer başarılıysa)
+        if(score >= 60) {
+            triggerConfetti();
+        }
+
+        // Kullanıcı istatistik güncelle (Demo fake veri itme)
+        app.user.stats.push(score);
+        app.user.stats.shift();
+        localStorage.setItem('sk_stats', JSON.stringify(app.user.stats));
+        renderChart();
+
+        alert(`SINAV TAMAMLANDI!\n\nPuanınız: ${Math.round(score)}\nDoğru Sayısı: ${correctCount}`);
     }
 
-    // --- STATS & CHARTS ---
-    function renderStats() {
-        // Fake Topic Data for demo (Normally calculate from actual answers)
-        const ctx = document.getElementById('topicChart').getContext('2d');
+    // --- GRAFİK (Chart.js) ---
+    function renderChart() {
+        const ctx = document.getElementById('miniChart').getContext('2d');
+        if(window.myChart) window.myChart.destroy();
         
-        // Destroy old chart if exists (simple check)
-        if(window.myTopicChart) window.myTopicChart.destroy();
-
-        window.myTopicChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: categories,
-                datasets: [{
-                    label: 'Başarı Oranı (%)',
-                    data: [80, 65, 90, 55, 70], // Dynamic calculation should go here
-                    backgroundColor: 'rgba(6, 182, 212, 0.2)',
-                    borderColor: '#06b6d4',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#fff'
-                }]
-            },
-            options: {
-                scales: {
-                    r: {
-                        grid: { color: 'rgba(255,255,255,0.1)' },
-                        angleLines: { color: 'rgba(255,255,255,0.1)' },
-                        suggestedMin: 0, suggestedMax: 100
-                    }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-
-        // Fill History List
-        const list = document.getElementById('history-list');
-        list.innerHTML = '';
-        [...appState.user.history].reverse().slice(0, 5).forEach(h => {
-            list.innerHTML += `
-                <li style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <span>${h.date}</span>
-                    <span style="color:${h.score >= 60 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold;">${h.score} Puan</span>
-                </li>
-            `;
-        });
-    }
-
-    function renderHistoryChart() {
-        const ctx = document.getElementById('miniHistoryChart').getContext('2d');
-        if(window.myHistChart) window.myHistChart.destroy();
-
-        const scores = appState.user.history.map(h => h.score);
-        const labels = appState.user.history.map(h => h.date);
-
-        window.myHistChart = new Chart(ctx, {
+        window.myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: ['1.D', '2.D', '3.D', '4.D', '5.D', 'Son'],
                 datasets: [{
                     label: 'Puan',
-                    data: scores.length ? scores : [0],
-                    borderColor: '#8b5cf6',
+                    data: app.user.stats,
+                    borderColor: '#06b6d4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                    borderWidth: 3,
                     tension: 0.4,
                     fill: true,
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)'
+                    pointBackgroundColor: '#fff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { display: false } }
+                plugins: { legend: {display: false} },
+                scales: {
+                    x: { display: false },
+                    y: { display: false, min: 0, max: 100 }
+                }
             }
         });
     }
 
-    // --- USER PROFILE ---
+    // --- KULLANICI AYARLARI ---
     function updateName(val) {
-        appState.user.name = val;
-        localStorage.setItem('userName', val);
-        document.getElementById('profile-name').innerText = val;
+        app.user.name = val;
+        localStorage.setItem('sk_name', val);
+        document.getElementById('profile-name-display').innerText = val;
     }
 
-    function updateRank() {
-        const exams = appState.user.history.length;
-        let rank = "Çaylak";
-        if(exams > 5) rank = "Uzman";
-        if(exams > 20) rank = "Başkomutan";
-        document.getElementById('user-rank').innerHTML = `⭐ <span>${rank}</span>`;
+    function resetData() {
+        if(confirm('Tüm ilerlemen silinecek. Emin misin?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    function triggerConfetti() {
+        var duration = 3 * 1000;
+        var end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 5,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#06b6d4', '#8b5cf6']
+            });
+            confetti({
+                particleCount: 5,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#06b6d4', '#8b5cf6']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
     }
 
 </script>
