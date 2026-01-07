@@ -3,528 +3,652 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ŞekerKerimSecurity | ÖGG Hazırlık Sistemi</title>
-<meta name="description" content="Kenan Komutanın Askerleri için Özel Güvenlik Sınav Sistemi">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<title>ŞekerKerim Elite | Profesyonel Güvenlik Sistemleri</title>
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg-color: #0f172a;
-        --card-bg: #1e293b;
-        --primary: #10b981; /* Yeşil */
-        --primary-hover: #059669;
-        --secondary: #3b82f6; /* Mavi */
+        --bg-dark: #020617;
+        --glass: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --primary: #10b981; /* Zümrüt Yeşili */
+        --gold: #fbbf24; /* Altın */
         --danger: #ef4444;
-        --text-main: #f1f5f9;
+        --text-main: #f8fafc;
         --text-muted: #94a3b8;
-        --accent: #f59e0b; /* Altın */
+        --glow: 0 0 20px rgba(16, 185, 129, 0.4);
     }
 
-    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-    
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
+
     body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-color);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-dark);
         color: var(--text-main);
+        height: 100vh;
+        overflow: hidden; /* Scroll engelle, uygulama hissi ver */
         display: flex;
         flex-direction: column;
-        min-height: 100vh;
-        overflow-x: hidden;
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+    }
+
+    /* --- ANIMATED BACKGROUND PARTICLES --- */
+    .bg-anim {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        animation: float 10s infinite ease-in-out;
+    }
+    .orb-1 { width: 300px; height: 300px; background: #10b981; top: -50px; left: -50px; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: #3b82f6; bottom: -100px; right: -100px; animation-delay: -5s; }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(30px, 50px); }
+    }
+
+    /* --- LAYOUT --- */
+    .app-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 10;
+        overflow-y: auto; /* İçerik kaydırma */
     }
 
     /* --- HEADER --- */
     header {
-        background: rgba(30, 41, 59, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 15px 20px;
-        text-align: center;
-        border-bottom: 1px solid #334155;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
     }
-    
-    header h1 {
+    .logo h1 {
         margin: 0;
-        font-size: 1.5rem;
-        background: linear-gradient(90deg, #10b981, #3b82f6);
+        font-size: 1.4rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 800;
         letter-spacing: -0.5px;
     }
-
-    header small {
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        font-weight: 600;
+    .logo small {
         display: block;
-        margin-top: 4px;
+        font-size: 0.75rem;
+        color: var(--primary);
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+    .mute-btn {
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: #fff;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.3s;
     }
 
-    /* --- CONTAINER --- */
-    .container {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    /* --- CARDS (GLASSMORPHISM) --- */
+    .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 25px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* --- CARDS --- */
-    .card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        border: 1px solid #334155;
-        transition: transform 0.3s ease;
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .hidden { display: none !important; }
 
-    h2 { margin-top: 0; font-size: 1.8rem; text-align: center; margin-bottom: 25px; }
+    /* --- TICKER (ULTRA SMOOTH & READABLE) --- */
+    .ticker-wrapper {
+        background: rgba(0,0,0,0.3);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 20px;
+        padding: 12px 0;
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+    }
+    .ticker-track {
+        display: flex;
+        gap: 50px;
+        width: max-content;
+        animation: scroll 80s linear infinite; /* ÇOK YAVAŞLATILDI */
+    }
+    .ticker-wrapper:hover .ticker-track, 
+    .ticker-wrapper:active .ticker-track {
+        animation-play-state: paused; /* DURDURMA ÖZELLİĞİ */
+    }
+    .ticker-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    .ticker-badge {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--primary);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+    @keyframes scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
 
     /* --- BUTTONS --- */
     .btn {
         width: 100%;
-        padding: 16px;
-        font-size: 1rem;
-        font-weight: 600;
+        padding: 18px;
+        border-radius: 16px;
         border: none;
-        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: 15px;
-        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        transition: all 0.3s ease;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+        margin-bottom: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+    .btn:hover::after { left: 100%; }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        color: white;
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
     }
 
-    .btn-primary { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-    .btn-primary:active { transform: scale(0.98); }
-    
-    .btn-secondary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-    .btn-secondary:active { transform: scale(0.98); }
-
-    .btn-outline { background: transparent; border: 2px solid #334155; color: var(--text-muted); }
-    .btn-outline:hover { border-color: var(--text-main); color: var(--text-main); }
-
-    /* --- INSTAGRAM LINK --- */
-    .insta-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    .insta-btn {
+        background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
         color: white;
         text-decoration: none;
-        padding: 12px;
-        border-radius: 50px;
-        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        border-radius: 16px;
         font-weight: 600;
-        font-size: 0.9rem;
-        transition: opacity 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 10px 20px rgba(220, 39, 67, 0.2);
     }
-    .insta-link:hover { opacity: 0.9; }
 
-    /* --- LIVE TICKER --- */
-    .ticker-wrap {
-        width: 100%;
+    /* --- EXAM UI --- */
+    .timer-bar {
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+        margin-bottom: 25px;
         overflow: hidden;
-        background: rgba(0,0,0,0.2);
-        padding: 10px 0;
-        border-radius: 8px;
-        margin-top: 20px;
-        white-space: nowrap;
     }
-    .ticker { display: inline-block; animation: ticker 20s linear infinite; padding-left: 100%; }
-    .ticker-item { display: inline-block; padding: 0 20px; font-size: 0.9rem; color: var(--accent); }
-    @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+    .timer-fill {
+        height: 100%;
+        background: var(--gold);
+        width: 100%;
+        transition: width 1s linear;
+    }
 
-    /* --- QUIZ AREA --- */
-    .quiz-header {
+    .question-card {
+        text-align: left;
+    }
+    .q-meta {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        font-size: 0.9rem;
         color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        font-weight: 600;
     }
-    .timer-badge {
-        background: rgba(245, 158, 11, 0.15);
-        color: var(--accent);
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-weight: bold;
-    }
-
-    .progress-container {
-        width: 100%;
-        height: 6px;
-        background: #334155;
-        border-radius: 3px;
-        margin-bottom: 25px;
-        overflow: hidden;
-    }
-    .progress-bar {
-        height: 100%;
-        background: var(--primary);
-        width: 0%;
-        transition: width 0.3s ease;
-    }
-
-    .question-text {
-        font-size: 1.2rem;
+    .q-text {
+        font-size: 1.25rem;
         line-height: 1.6;
-        margin-bottom: 25px;
-        font-weight: 500;
+        font-weight: 600;
+        margin-bottom: 30px;
+        min-height: 80px;
     }
 
     .option {
-        background: #253346;
-        padding: 16px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05);
+        padding: 18px;
+        border-radius: 14px;
         margin-bottom: 12px;
-        border-radius: 10px;
         cursor: pointer;
-        border: 2px solid transparent;
+        display: flex;
+        align-items: center;
         transition: all 0.2s;
-        display: flex;
-        align-items: center;
     }
-    .option:hover { background: #2d3e54; }
-    .option-letter {
-        width: 30px;
-        height: 30px;
-        background: #334155;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .option:active { transform: scale(0.98); }
+    .option-key {
+        width: 32px; height: 32px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
         margin-right: 15px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 0.9rem;
-        flex-shrink: 0;
     }
-
-    /* Correct/Wrong States */
-    .option.correct { background: rgba(16, 185, 129, 0.15); border-color: var(--primary); color: var(--primary); }
-    .option.correct .option-letter { background: var(--primary); color: #fff; }
     
-    .option.wrong { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); color: var(--danger); opacity: 0.7; }
-    .option.wrong .option-letter { background: var(--danger); color: #fff; }
+    .option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--primary); box-shadow: 0 0 15px rgba(16, 185, 129, 0.1); }
+    .option.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); }
+    .disabled { pointer-events: none; opacity: 0.7; }
 
-    .disabled { pointer-events: none; }
-
-    /* --- RESULT AREA --- */
-    .score-circle {
-        width: 120px;
-        height: 120px;
+    /* --- RESULTS --- */
+    .result-chart {
+        width: 160px; height: 160px;
         border-radius: 50%;
-        border: 8px solid #334155;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px auto;
-        font-size: 2rem;
-        font-weight: 800;
+        background: conic-gradient(var(--primary) 0%, rgba(255,255,255,0.1) 0%);
+        margin: 0 auto 30px;
+        display: flex; align-items: center; justify-content: center;
+        position: relative;
     }
-    .score-circle.success { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
-    .score-circle.fail { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 25px;
+    .result-chart::before {
+        content: ''; position: absolute;
+        width: 140px; height: 140px;
+        background: #151d2e; /* Card color match roughly */
+        border-radius: 50%;
     }
-    .stat-box {
-        background: #253346;
-        padding: 15px;
-        border-radius: 10px;
+    .chart-text {
+        position: relative; z-index: 2;
         text-align: center;
     }
-    .stat-val { font-size: 1.2rem; font-weight: bold; display: block; }
-    .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+    .chart-score { font-size: 2.5rem; font-weight: 800; display: block; line-height: 1; }
+    .chart-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
 
-    /* --- FOOTER --- */
+    .stat-row {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;
+    }
+    .stat-card {
+        background: rgba(255,255,255,0.03);
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    /* --- CONFETTI CANVAS --- */
+    #confetti {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 999;
+    }
+
     footer {
         text-align: center;
-        padding: 20px;
-        color: #475569;
-        font-size: 0.8rem;
-        border-top: 1px solid #1e293b;
-    }
-
-    @media (max-width: 600px) {
-        .card { padding: 20px; margin: 10px; }
-        h2 { font-size: 1.4rem; }
-        .question-text { font-size: 1.05rem; }
+        padding: 15px;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        opacity: 0.6;
     }
 </style>
 </head>
 <body>
 
-<header>
-    <h1>ŞekerKerimSecurity</h1>
-    <small>Kenan Komutanın Askeri</small>
-</header>
-
-<div class="container">
-
-    <div id="home-screen" class="card">
-        <h2>Sınav Modu Seçin</h2>
-        <p style="text-align:center; color:#94a3b8; margin-bottom:30px;">Gerçek sınav deneyimi için 100 soru, 120 dakika.</p>
-        
-        <button class="btn btn-primary" onclick="app.startExam('silahsız')">
-            <span>🛡️</span> Silahsız ÖGG Deneme
-        </button>
-        <button class="btn btn-secondary" onclick="app.startExam('silahlı')">
-            <span>🔫</span> Silahlı ÖGG Deneme
-        </button>
-
-        <a class="insta-link" href="https://www.instagram.com/kerimm.b/" target="_blank">
-            📸 Instagram @kerimm.b Takip Et
-        </a>
-
-        <div class="ticker-wrap">
-            <div class="ticker" id="live-ticker">
-                </div>
-        </div>
-    </div>
-
-    <div id="exam-screen" class="card hidden">
-        <div class="quiz-header">
-            <span id="q-number">Soru 1/100</span>
-            <span id="timer" class="timer-badge">120:00</span>
-        </div>
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
-        </div>
-        
-        <div id="question-text" class="question-text">Soru yükleniyor...</div>
-        <div id="options-container"></div>
-    </div>
-
-    <div id="result-screen" class="card hidden">
-        <h2 id="result-title">Sınav Tamamlandı</h2>
-        <div id="score-circle" class="score-circle">0</div>
-        
-        <div class="stats-grid">
-            <div class="stat-box">
-                <span class="stat-val" id="res-correct" style="color:var(--primary)">0</span>
-                <span class="stat-label">Doğru</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-val" id="res-wrong" style="color:var(--danger)">0</span>
-                <span class="stat-label">Yanlış</span>
-            </div>
-        </div>
-
-        <p id="result-msg" style="text-align:center; margin-bottom:20px; color:#cbd5e1;"></p>
-
-        <button class="btn btn-primary" onclick="location.reload()">🔄 Yeni Sınav Başlat</button>
-        <button class="btn btn-outline" onclick="window.open('https://www.instagram.com/kerimm.b/','_blank')">Instagram'a Git</button>
-    </div>
-
+<div class="bg-anim">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 </div>
 
-<footer>
-    © 2026 ŞekerKerimSecurity – Profesyonel ÖGG Hazırlık Sistemi<br>
-    Yazılım ve Tasarım: Kenan Komutan'ın Ekibi
-</footer>
+<div class="app-container">
+    <header>
+        <div class="logo">
+            <h1>ŞekerKerimSecurity</h1>
+            <small>⭐ ELITE EDITION 2026</small>
+        </div>
+        <button class="mute-btn" onclick="toggleMute()" id="muteIcon">🔊</button>
+    </header>
+
+    <div id="home-screen" class="glass-card">
+        <h2 style="text-align:center; font-weight:400; color:#cbd5e1; margin-bottom:30px;">
+            Özel Güvenlik Sınavına<br><b style="color:white; font-weight:800; font-size:1.4rem;">Profesyonel Hazırlık</b>
+        </h2>
+        
+        <button class="btn btn-primary" onclick="startExam('silahsız')">
+            <span>🛡️</span> Silahsız Başlat
+        </button>
+        <button class="btn btn-secondary" onclick="startExam('silahlı')">
+            <span>🔫</span> Silahlı Başlat
+        </button>
+
+        <a href="https://www.instagram.com/kerimm.b/" target="_blank" class="insta-btn">
+            <span>📸 Instagram @kerimm.b</span>
+        </a>
+
+        <div class="ticker-wrapper">
+            <div class="ticker-track" id="ticker-content">
+                </div>
+        </div>
+        <div style="text-align:center; font-size:10px; color:#64748b; margin-top:5px;">
+            (Durdurmak için üzerine basılı tutun)
+        </div>
+    </div>
+
+    <div id="exam-screen" class="glass-card hidden">
+        <div class="timer-bar"><div id="time-bar-fill" class="timer-fill"></div></div>
+        
+        <div class="q-meta">
+            <span id="q-counter">Soru 1/100</span>
+            <span id="q-timer" style="color:var(--gold)">120:00</span>
+        </div>
+
+        <div class="q-text" id="question-text">Soru yükleniyor...</div>
+        <div id="options-area"></div>
+    </div>
+
+    <div id="result-screen" class="glass-card hidden">
+        <h2 style="text-align:center; margin-bottom:10px;">Sınav Raporu</h2>
+        <p style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-bottom:30px;">Kenan Komutan'ın Değerlendirmesi</p>
+
+        <div class="result-chart" id="score-chart">
+            <div class="chart-text">
+                <span class="chart-score" id="final-score">0</span>
+                <span class="chart-label">PUAN</span>
+            </div>
+        </div>
+
+        <div class="stat-row">
+            <div class="stat-card">
+                <div style="color:var(--primary); font-size:1.5rem; font-weight:bold;" id="total-correct">0</div>
+                <div style="font-size:0.7rem; color:#94a3b8;">DOĞRU</div>
+            </div>
+            <div class="stat-card">
+                <div style="color:var(--danger); font-size:1.5rem; font-weight:bold;" id="total-wrong">0</div>
+                <div style="font-size:0.7rem; color:#94a3b8;">YANLIŞ</div>
+            </div>
+        </div>
+
+        <div id="feedback-msg" style="text-align:center; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:20px; font-size:0.9rem;">
+            Analiz ediliyor...
+        </div>
+
+        <button class="btn btn-primary" onclick="location.reload()">🔄 Yeniden Başlat</button>
+    </div>
+
+    <footer>
+        DESIGNED BY KENAN KOMUTAN'IN EKİBİ<br>Ver. 5.0 Ultra Elite
+    </footer>
+</div>
+
+<canvas id="confetti"></canvas>
 
 <script>
-// --- VERİ HAVUZU ---
-const rawQuestions = [
-    {q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"],a:3},
-    {q:"Zor kullanmanın unsurları hangi seçenekte doğru verilmiştir?",o:["Silah – kelepçe – cop","Beden gücü – maddi güç – silah","Cop – kelepçe – silah","Kimlik – yakalama – arama","Silah – biber gazı – cop"],a:1},
-    {q:"Aşağıdakilerden hangisi özel güvenlik görevlisinin yetkileri arasında yer almaz?",o:["Önleyici arama","Adli arama","Yakalama","Suç delilini muhafaza","Olay yerini koruma"],a:1},
-    {q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanır?",o:["Her vatandaşa","Şüpheli davranış varsa","Sadece amirin emriyle","Toplu alanlarda","Mesai dışında"],a:1},
-    {q:"Aşağıdakilerden hangisi silah kullanma şartlarından biridir?",o:["Şüphelenmek","Amirin emri","Meşru savunma","Kimlik sormak","Caydırıcılık"],a:2},
-    {q:"Kelepçe takma ile ilgili hangisi doğrudur?",o:["Her yakalanana takılır","Direnç gösterene takılır","Kimliği olmayana takılır","Şikayetçiye takılır","Tanığa takılır"],a:1},
-    {q:"Özel güvenlik görevlisinin çalışma izni kaç yılda bir yenilenir?",o:["1","2","3","4","5"],a:4},
-    {q:"Aşağıdakilerden hangisi iletişimde empatiyi ifade eder?",o:["Karşıyı susturmak","Karşıyı anlamaya çalışmak","Emir vermek","Yüksek sesle konuşmak","Göz teması kurmamak"],a:1},
-    {q:"Olay yerinde ilk yapılması gereken nedir?",o:["Basına bilgi vermek","Şüpheliyi dövmek","Olay yerini koruma altına almak","Tanıkları uzaklaştırmak","Delilleri toplamak"],a:2},
-    {q:"Özel güvenlik görevlisi hangi durumda üst araması yapabilir?",o:["Her zaman","Şüphe varsa","Kanunda belirtilen hallerde","Amirin isteğiyle","Vatandaş isterse"],a:2},
-    {q:"Silahlı özel güvenlik görevlisi hangi durumda silahını kullanabilir?",o:["Keyfi kullanım","Meşru savunma","Sürekli taşımak","Görev bitiminde","Amirin isteği"],a:1},
-    {q:"Özel güvenlik kimliği ne zaman taşınmalıdır?",o:["Her zaman","Sadece görevde","İzinsiz","Amir emriyle","Yalnızca devriye"],a:1},
-    {q:"Zor kullanmada öncelikli araç hangisidir?",o:["Beden gücü","Silah","Cop","Kelepçe","Biber gazı"],a:0},
-    {q:"Hangi durumda ÖGG rapor tutar?",o:["Her olayda","Amir isterse","Sadece suçta","İhtiyaç varsa","Görevle ilgili her türlü olayda"],a:4},
-    {q:"Özel güvenlik görevlisi hangi durumda kişiyi yakalayabilir?",o:["Her zaman","Suçüstü hallerinde","Sadece şüpheli","Amir isteğiyle","Vatandaş talep ederse"],a:1},
-    {q:"Aşağıdakilerden hangisi devriye görevlerinden değildir?",o:["Olay yerini kontrol","Kişi güvenliği","Arama yapmak","Kollukla işbirliği","Basın bilgilendirmesi"],a:4},
-    {q:"Kolluk kuvvetine hangi durumda haber verilir?",o:["Suç işlendiğinde","Şüpheli harekette","İstendiğinde","Yasaya aykırı durumlarda","Hepsi"],a:4},
-    {q:"ÖGG görev alanı dışına hangi durumda çıkabilir?",o:["Hiçbir zaman","Acil durum ve takip","Amir emri","Toplantıda","Tatilde"],a:1},
-    {q:"Yangın söndürme cihazı (KKT) hangi yangınlarda etkilidir?",o:["Sadece Elektrik","Sadece Katı","Sıvı ve Gaz","Metal","Nükleer"],a:2},
-    {q:"Görev sırasında hangi iletişim aracı zorunludur?",o:["Telsiz","Telefon","Faks","Yazı","Email"],a:0},
-    {q:"Arama ve yakalamada hangi unsur önemlidir?",o:["Kanun","Şüphe","Amir","Mesai","Tanık"],a:0},
-    {q:"ÖGG silahını nerede kullanamaz?",o:["Görev alanı dışında","Meşru savunma","Tehdit altında","Olay yerinde","Acil durumda"],a:0},
-    {q:"Kollukla işbirliği neden önemlidir?",o:["Kanun gereği","Halk güvenliği","Amir isteği","Toplum hizmeti","Rastgele"],a:1},
-    {q:"Kamu mallarını koruma yetkisi hangi görevi kapsar?",o:["Devriye","Önleme","Yakalama","Arama","Kolluk ile işbirliği"],a:1},
-    {q:"Hangi durumda zor kullanılamaz?",o:["Tehdit varsa","Meşru savunma","Keyfi olarak","Kanun çerçevesinde","Caydırıcılık amaçlı"],a:2}
-];
+    // --- SES EFEKTLERİ ---
+    const sounds = {
+        click: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.m3u8'), // Click sound placeholder
+        correct: new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.m3u8'), // Success ping
+        wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.m3u8'), // Error
+        pass: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.m3u8') // Win
+    };
+    let isMuted = false;
 
-// İsim Listesi
-const users = ["Abdul Samet","Nurullah Başkan","Furkan Uçar","Melih Özay","Muhammed Konuş","Okan","Baran","Emin","Emre","İsmail Dal","Serhat Olgun","Raziye Kavramak","Rabia","Hatice","Etoo","Tuğba","Kenan Komutan"];
+    function playSound(type) {
+        if(isMuted) return;
+        // Basit ses simülasyonu (gerçek URL'ler CORS yiyebilir, localde çalışması için basit bip fonksiyonu kullanılabilir ama profesyonel görünüm için bu yapıyı koruyoruz)
+        // Eğer ses dosyası çalınamazsa hata vermemesi için:
+        try {
+            sounds[type].currentTime = 0;
+            sounds[type].volume = 0.3;
+            sounds[type].play().catch(e=>{});
+        } catch(e){}
+    }
 
-// --- UYGULAMA MANTIĞI ---
-const app = {
-    questions: [],
-    currentIndex: 0,
-    answers: [],
-    timer: null,
-    timeLeft: 120 * 60, // 120 Dakika
+    function toggleMute() {
+        isMuted = !isMuted;
+        document.getElementById('muteIcon').innerText = isMuted ? '🔇' : '🔊';
+    }
 
-    // Başlatma
-    init: function() {
-        this.startTicker();
-    },
+    // --- TİTREŞİM (HAPTIC) ---
+    function vibrate(pattern) {
+        if(navigator.vibrate) navigator.vibrate(pattern);
+    }
 
-    // Sınav Başlat
-    startExam: function(type) {
+    // --- VERİ ---
+    const rawQuestions = [
+        {q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"],a:3},
+        {q:"Zor kullanmanın unsurları hangi seçenekte doğru verilmiştir?",o:["Silah – kelepçe – cop","Beden gücü – maddi güç – silah","Cop – kelepçe – silah","Kimlik – yakalama – arama","Silah – biber gazı – cop"],a:1},
+        {q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanır?",o:["Her vatandaşa","Şüpheli davranış varsa","Sadece amirin emriyle","Toplu alanlarda","Mesai dışında"],a:1},
+        {q:"Silah kullanma şartlarından en önemlisi hangisidir?",o:["Şüphelenmek","Amirin emri","Meşru müdafaa (savunma)","Kimlik sormak","Caydırıcılık"],a:2},
+        {q:"Kelepçe takma ile ilgili hangisi doğrudur?",o:["Her yakalanana takılır","Direnç gösterene veya kaçana","Kimliği olmayana","Şikayetçiye","Tanığa takılır"],a:1},
+        {q:"Özel güvenlik görevlisinin çalışma izni (Kimlik Kartı) kaç yılda bir yenilenir?",o:["1","2","3","4","5"],a:4},
+        {q:"Olay yerinde ilk yapılması gereken nedir?",o:["Basına bilgi vermek","Şüpheliyi sorgulamak","Olay yerini koruma altına almak","Tanıkları uzaklaştırmak","Delilleri elle toplamak"],a:2},
+        {q:"Özel güvenlik görevlisi hangi durumda üst araması (kaba arama) yapabilir?",o:["Her zaman","Makul şüphe ve güvenlik sistemleri uyarısında","Sadece amirin isteğiyle","Vatandaş isterse","Hiçbir zaman"],a:1},
+        {q:"Silahlı ÖGG silahını görev alanı dışında taşıyabilir mi?",o:["Evet, her zaman","Hayır, taşıyamaz (İstisnalar hariç)","Amiri izin verirse","Mermisi yoksa","Sadece gece"],a:1},
+        {q:"Özel güvenlik kimlik kartı ne zaman yakada taşınmalıdır?",o:["Her zaman","Sadece görev alanında ve süresinde","İzinsiz günlerde","Sadece denetimlerde","Cebinde olsa yeter"],a:1},
+        {q:"Yangın söndürme cihazı (KKT) hangi yangın tiplerinde kullanılır?",o:["Sadece Elektrik","A, B ve C sınıfı yangınlar","Sadece Metal","Sadece Gaz","Nükleer"],a:1},
+        {q:"X-Ray cihazından geçen bagajda ne görünmez?",o:["Silah","Bıçak","Patlayıcı","Kağıt üzerindeki yazı","Metal kutu"],a:3},
+        {q:"Telsiz konuşmalarında hangisi yasaktır?",o:["Kod kullanmak","Kısa konuşmak","Gizli bilgileri açıkça konuşmak","Anlaşıldı demek","Tamam demek"],a:2},
+        {q:"Hangi durumda zor kullanılamaz?",o:["Direniş varsa","Meşru savunma","Saldırı varsa","Kaçma varsa","Ceza vermek amacıyla"],a:4},
+        {q:"Tutanak tanzim ederken hangisi zorunlu değildir?",o:["Tarih","Saat","İmzalar","Olayın özeti","Kağıdın rengi"],a:4}
+    ];
+
+    const users = ["Abdul Samet","Nurullah Başkan","Furkan Uçar","Melih Özay","Muhammed Konuş","Okan","Baran","Emin","Emre","İsmail Dal","Serhat Olgun","Raziye Kavramak","Rabia","Hatice","Etoo","Tuğba","Kenan Komutan"];
+
+    // --- UYGULAMA MANTIĞI ---
+    let questions = [];
+    let currentIdx = 0;
+    let score = 0;
+    let timerInterval;
+    let totalTime = 120 * 60; // 120 dk
+
+    // Ticker Başlat
+    function initTicker() {
+        const track = document.getElementById('ticker-content');
+        let content = "";
+        // İsimleri 3 kez tekrarla ki akış kesilmesin
+        for(let j=0; j<3; j++) {
+            users.forEach(user => {
+                const rndScore = 50 + Math.floor(Math.random() * 50);
+                content += `
+                    <div class="ticker-item">
+                        <span class="ticker-badge">${rndScore} Puan</span>
+                        <span>${user}</span>
+                        <span style="opacity:0.5; font-size:10px;">●</span>
+                    </div>
+                `;
+            });
+        }
+        track.innerHTML = content;
+    }
+    initTicker();
+
+    function startExam(type) {
+        playSound('click');
+        vibrate(50);
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('exam-screen').classList.remove('hidden');
         
-        // Soruları karıştır ve 100'e tamamla
-        this.questions = this.generateQuestions(100);
-        this.currentIndex = 0;
-        this.answers = new Array(100).fill(null);
-        this.timeLeft = 120 * 60;
-        
-        this.renderQuestion();
-        this.startTimer();
-    },
-
-    // Soru Üretici (Karıştır ve Çoğalt)
-    generateQuestions: function(count) {
-        let pool = [...rawQuestions];
-        // Fisher-Yates Shuffle
-        for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
+        // Soruları karıştır ve çoğalt (Demo için 100 soru simülasyonu)
+        let pool = [];
+        while(pool.length < 100) {
+            pool.push(...rawQuestions);
         }
+        pool = pool.slice(0, 100).sort(() => Math.random() - 0.5);
         
-        // 100 soruya tamamla (mevcutları tekrarla ama sırasını bozarak)
-        let finalQuestions = [];
-        while(finalQuestions.length < count) {
-            finalQuestions = finalQuestions.concat(pool);
-        }
-        return finalQuestions.slice(0, count);
-    },
+        questions = pool;
+        currentIdx = 0;
+        score = 0;
+        totalTime = 120 * 60;
+        
+        renderQuestion();
+        startTimer();
+    }
 
-    // Soruyu Ekrana Bas
-    renderQuestion: function() {
-        const q = this.questions[this.currentIndex];
-        const progress = ((this.currentIndex + 1) / 100) * 100;
-        
-        document.getElementById('q-number').innerText = `Soru ${this.currentIndex + 1} / 100`;
-        document.getElementById('progress-bar').style.width = `${progress}%`;
+    function renderQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('q-counter').innerText = `SORU ${currentIdx + 1} / 100`;
         document.getElementById('question-text').innerText = q.q;
-
-        const optsContainer = document.getElementById('options-container');
-        optsContainer.innerHTML = '';
-        optsContainer.className = ''; // Reset class
-
-        q.o.forEach((optText, idx) => {
+        
+        const area = document.getElementById('options-area');
+        area.innerHTML = '';
+        
+        q.o.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = 'option';
-            div.innerHTML = `<div class="option-letter">${String.fromCharCode(65+idx)}</div> ${optText}`;
-            div.onclick = () => this.selectAnswer(idx, div);
-            optsContainer.appendChild(div);
+            div.innerHTML = `<div class="option-key">${String.fromCharCode(65+i)}</div> ${opt}`;
+            div.onclick = () => checkAnswer(i, q.a, div);
+            area.appendChild(div);
         });
-    },
+    }
 
-    // Cevap Seçimi
-    selectAnswer: function(selectedIndex, element) {
-        if (this.answers[this.currentIndex] !== null) return; // Zaten cevaplandıysa çık
+    function checkAnswer(selected, correct, el) {
+        if(el.classList.contains('disabled')) return;
+        
+        // Tüm şıkları kilitle
+        const opts = document.querySelectorAll('.option');
+        opts.forEach(o => o.classList.add('disabled'));
 
-        const correctIndex = this.questions[this.currentIndex].a;
-        this.answers[this.currentIndex] = selectedIndex;
+        if(selected === correct) {
+            el.classList.add('correct');
+            score++;
+            playSound('correct');
+            vibrate([50, 50, 50]); // Kısa 2 titreme
+        } else {
+            el.classList.add('wrong');
+            opts[correct].classList.add('correct'); // Doğruyu göster
+            playSound('wrong');
+            vibrate(200); // Uzun titreme
+        }
 
-        // Görsel Geri Bildirim
-        const options = document.querySelectorAll('.option');
-        options.forEach((opt, idx) => {
-            opt.classList.add('disabled'); // Tıklamayı engelle
-            if (idx === correctIndex) opt.classList.add('correct');
-            if (idx === selectedIndex && idx !== correctIndex) opt.classList.add('wrong');
-        });
-
-        // Otomatik İlerleme
         setTimeout(() => {
-            if (this.currentIndex < 99) {
-                this.currentIndex++;
-                this.renderQuestion();
+            currentIdx++;
+            if(currentIdx < 100) {
+                renderQuestion();
             } else {
-                this.finishExam();
+                finishExam();
             }
-        }, 1200); // 1.2 saniye bekle
-    },
+        }, 1200); // Kullanıcı görsün diye bekleme süresi
+    }
 
-    // Sayaç
-    startTimer: function() {
-        this.timer = setInterval(() => {
-            this.timeLeft--;
-            const m = Math.floor(this.timeLeft / 60);
-            const s = this.timeLeft % 60;
-            document.getElementById('timer').innerText = `${m}:${s.toString().padStart(2, '0')}`;
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            totalTime--;
+            const m = Math.floor(totalTime / 60);
+            const s = totalTime % 60;
+            document.getElementById('q-timer').innerText = `${m}:${s.toString().padStart(2, '0')}`;
             
-            if (this.timeLeft <= 0) this.finishExam();
-        }, 1000);
-    },
+            // Progress Bar Animasyonu
+            const percentage = (totalTime / (120*60)) * 100;
+            document.getElementById('time-bar-fill').style.width = percentage + "%";
 
-    // Sınav Bitişi
-    finishExam: function() {
-        clearInterval(this.timer);
+            if(totalTime <= 0) finishExam();
+        }, 1000);
+    }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        playSound('pass');
         document.getElementById('exam-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
-
-        let correct = 0;
-        this.answers.forEach((ans, idx) => {
-            if (ans === this.questions[idx].a) correct++;
-        });
         
-        const wrong = 100 - correct;
-        const score = correct; // Her soru 1 puan (ÖGG standardı)
-        
-        const circle = document.getElementById('score-circle');
-        circle.innerText = score;
-        document.getElementById('res-correct').innerText = correct;
-        document.getElementById('res-wrong').innerText = wrong;
+        const finalScore = score; // 100 üzerinden
+        document.getElementById('final-score').innerText = finalScore;
+        document.getElementById('total-correct').innerText = finalScore;
+        document.getElementById('total-wrong').innerText = 100 - finalScore;
 
-        if (score >= 60) {
-            circle.classList.add('success');
-            document.getElementById('result-title').innerText = "TEBRİKLER! GEÇTİNİZ";
-            document.getElementById('result-msg').innerText = "Kenan Komutan seninle gurur duyuyor!";
+        // Chart Boyama
+        document.getElementById('score-chart').style.background = 
+            `conic-gradient(${finalScore >= 60 ? '#10b981' : '#ef4444'} ${finalScore}%, rgba(255,255,255,0.1) 0%)`;
+
+        const msgBox = document.getElementById('feedback-msg');
+        if(finalScore >= 60) {
+            msgBox.innerHTML = "✅ <b style='color:#10b981'>TEBRİKLER! SINAVI GEÇTİNİZ.</b><br>Kenan Komutan seni takdir etti. Bu kimliği hak ettin.";
+            msgBox.style.border = "1px solid #10b981";
+            startConfetti();
         } else {
-            circle.classList.add('fail');
-            document.getElementById('result-title').innerText = "MAALESEF KALDINIZ";
-            document.getElementById('result-msg').innerText = "Biraz daha çalışman gerekiyor asker!";
+            msgBox.innerHTML = "❌ <b style='color:#ef4444'>BAŞARISIZ.</b><br>Biraz daha çalışman lazım asker. Bu puanla nöbet bile tutamazsın.";
+            msgBox.style.border = "1px solid #ef4444";
         }
-    },
-
-    // Kayan Yazı Animasyonu
-    startTicker: function() {
-        const ticker = document.getElementById('live-ticker');
-        let html = '';
-        // İsimleri rastgele puanlarla listeye ekle
-        for(let i=0; i<30; i++) { // Döngüsel görünüm için çoğalt
-            const user = users[i % users.length];
-            const score = 60 + Math.floor(Math.random() * 40);
-            html += `<span class="ticker-item">👤 ${user} sınavı bitirdi (${score} Puan)</span>`;
-        }
-        ticker.innerHTML = html;
     }
-};
 
-// Uygulamayı Başlat
-app.init();
+    // --- CONFETTI EFFECT (Basit Canvas Implementasyonu) ---
+    function startConfetti() {
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const colors = ['#10b981', '#3b82f6', '#fbbf24', '#ef4444'];
+
+        function Particle() {
+            this.x = Math.random() * canvas.width;
+            this.y = -20;
+            this.vx = Math.random() * 4 - 2;
+            this.vy = Math.random() * 5 + 2;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.size = Math.random() * 8 + 4;
+        }
+
+        for(let i=0; i<100; i++) particles.push(new Particle());
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.1; // Gravity
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                
+                if(p.y > canvas.height) particles[index] = new Particle();
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+        
+        setTimeout(() => { canvas.style.display = 'none'; }, 5000);
+    }
 
 </script>
 </body>
