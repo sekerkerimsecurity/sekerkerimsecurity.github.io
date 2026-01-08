@@ -1,772 +1,926 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="ŞekerKerim Özel Güvenlik Sınav Sistemi">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Özel Güvenlik Sınav Sistemi | Pro Edition</title>
+    <meta name="description" content="Özel Güvenlik Sınavı Hazırlık Platformu - Silahlı ve Silahsız Deneme Sınavları">
+    <meta name="author" content="Kerim Bayraktar">
 
-<title>ŞekerKerim Platinum | Ultimate</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<style>
-    :root {
-        --bg-body: #0b1120;
-        --card-bg: rgba(30, 41, 59, 0.75);
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --primary: #06b6d4; /* Cyan */
-        --primary-glow: rgba(6, 182, 212, 0.5);
-        --secondary: #8b5cf6; /* Violet */
-        --insta-grad: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        --success: #10b981;
-        --danger: #ef4444;
-        --gold: #f59e0b;
-        --text: #f8fafc;
-        --text-dim: #94a3b8;
-        --safe-top: env(safe-area-inset-top);
-        --safe-bottom: env(safe-area-inset-bottom);
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    body {
-        margin: 0; padding: 0;
-        font-family: 'Outfit', sans-serif;
-        background: var(--bg-body);
-        color: var(--text);
-        height: 100vh;
-        overflow: hidden;
-        overscroll-behavior: none;
-    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* --- DYNAMIC BACKGROUND & PARTICLES --- */
-    .bg-mesh {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
-        background: radial-gradient(circle at 0% 0%, rgba(6,182,212,0.15), transparent 40%),
-                    radial-gradient(circle at 100% 100%, rgba(139,92,246,0.15), transparent 40%);
-        filter: blur(40px);
-    }
-    
-    .particle {
-        position: absolute;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
-        animation: floatUp linear infinite;
-        z-index: -1;
-    }
-    @keyframes floatUp {
-        0% { transform: translateY(100vh) scale(0); opacity: 0; }
-        50% { opacity: 0.5; }
-        100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-    }
+    <style>
+        /* * --------------------------------------------------------------------------
+         * GLOBAL CSS DEĞİŞKENLERİ VE SIFIRLAMA
+         * --------------------------------------------------------------------------
+         */
+        :root {
+            --primary: #1a202c;       /* Koyu Lacivert */
+            --secondary: #2d3748;     /* Gri Ton */
+            --accent: #3182ce;        /* Profesyonel Mavi */
+            --accent-hover: #2c5282;
+            --success: #38a169;       /* Onay Yeşili */
+            --error: #e53e3e;         /* Hata Kırmızısı */
+            --warning: #d69e2e;       /* Uyarı Sarısı */
+            --bg-body: #f7fafc;       /* Açık Arkaplan */
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-light: #718096;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-    /* --- APP LAYOUT --- */
-    .app-container {
-        display: flex; flex-direction: column;
-        height: 100%;
-        padding-top: max(10px, var(--safe-top));
-        padding-bottom: calc(70px + var(--safe-bottom));
-        position: relative;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    .scroll-view {
-        flex: 1; overflow-y: auto; padding: 0 20px;
-        scroll-behavior: smooth;
-    }
-    /* Scrollbar Hide */
-    .scroll-view::-webkit-scrollbar { display: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-    .hidden { display: none !important; }
-    .fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* * --------------------------------------------------------------------------
+         * HEADER VE TICKER (KAYAN BANT) STİLLERİ
+         * --------------------------------------------------------------------------
+         */
+        header {
+            background: var(--primary);
+            color: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
 
-    /* --- TICKER (KAYAN YAZI) --- */
-    .ticker-container {
-        background: linear-gradient(90deg, rgba(6,182,212,0.1), rgba(139,92,246,0.1));
-        border-bottom: 1px solid var(--glass-border);
-        height: 36px; display: flex; align-items: center; overflow: hidden;
-        margin-bottom: 15px; position: relative;
-    }
-    .ticker-content {
-        display: flex; white-space: nowrap;
-        animation: tickerScroll 45s linear infinite;
-    }
-    .ticker-item {
-        padding: 0 20px; font-size: 0.75rem; font-weight: 700; 
-        color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;
-        display: flex; align-items: center; gap: 5px;
-    }
-    @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .ticker-wrapper {
+            width: 100%;
+            height: 44px;
+            background: linear-gradient(90deg, #1a202c 0%, #2d3748 50%, #1a202c 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
 
-    /* --- CARDS & UI --- */
-    .card {
-        background: var(--card-bg);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--glass-border);
-        border-radius: 24px; padding: 20px; margin-bottom: 15px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        transition: transform 0.2s;
-    }
-    .card:active { transform: scale(0.99); }
+        .ticker-content {
+            display: flex;
+            animation: scroll 45s linear infinite; /* Hızı buradan ayarlayabilirsin */
+            white-space: nowrap;
+        }
 
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .brand-title { font-size: 1.5rem; font-weight: 900; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .streak-badge {
-        background: rgba(245, 158, 11, 0.2); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4);
-        padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;
-        display: flex; align-items: center; gap: 5px; opacity: 0; transition: 0.3s;
-    }
-    .streak-badge.active { opacity: 1; transform: scale(1.1); }
+        .ticker-item {
+            padding: 0 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cbd5e0;
+            display: flex;
+            align-items: center;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
 
-    /* --- EXAM QUESTION CARD --- */
-    .question-card {
-        min-height: 180px; display: flex; flex-direction: column; justify-content: center;
-        position: relative; overflow: hidden;
-    }
-    .swipe-hint {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        font-size: 2rem; color: rgba(255,255,255,0.1); pointer-events: none;
-    }
-    .swipe-left { left: 10px; } .swipe-right { right: 10px; }
+        .ticker-item i {
+            margin-right: 8px;
+            color: var(--accent);
+            font-size: 0.7rem;
+        }
 
-    .q-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; align-self: flex-start; margin-bottom: 10px; }
-    .q-text { font-size: 1.25rem; font-weight: 600; line-height: 1.5; }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
 
-    /* --- OPTIONS --- */
-    .option {
-        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-        padding: 16px; border-radius: 16px; margin-bottom: 10px;
-        display: flex; align-items: center; transition: 0.2s; position: relative; overflow: hidden;
-        cursor: pointer;
-    }
-    .option:active { transform: scale(0.98); background: rgba(255,255,255,0.06); }
-    .opt-char { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 15px; flex-shrink: 0; }
-    
-    .option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
-    .option.correct .opt-char { background: var(--success); color: #fff; }
-    
-    .option.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); animation: shake 0.4s; }
-    .option.wrong .opt-char { background: var(--danger); color: #fff; }
-    
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        /* * --------------------------------------------------------------------------
+         * ANA MAIN CONTAINER
+         * --------------------------------------------------------------------------
+         */
+        main {
+            flex: 1;
+            margin-top: 80px; /* Header yüksekliği kadar boşluk */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
 
-    /* --- INSTAGRAM BUTTON --- */
-    .insta-btn {
-        background: var(--insta-grad);
-        color: white; border: none; padding: 15px;
-        border-radius: 16px; font-weight: 700; font-size: 1rem;
-        display: flex; align-items: center; justify-content: center; gap: 10px;
-        width: 100%; text-decoration: none; margin-top: 10px;
-        box-shadow: 0 10px 20px -5px rgba(220, 39, 67, 0.4);
-        position: relative; overflow: hidden;
-    }
-    .insta-btn::before {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: shine 3s infinite;
-    }
-    @keyframes shine { 100% { left: 200%; } }
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* --- BOTTOM NAV --- */
-    .bottom-nav {
-        position: fixed; bottom: 0; left: 0; width: 100%;
-        background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
-        border-top: 1px solid var(--glass-border);
-        display: flex; justify-content: space-around;
-        padding-top: 12px; padding-bottom: max(12px, var(--safe-bottom));
-        z-index: 50;
-    }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-dim); font-size: 0.7rem; transition: 0.3s; width: 60px;}
-    .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
-    .nav-item.active { color: var(--primary); transform: translateY(-2px); }
-    .nav-item.active svg { filter: drop-shadow(0 0 8px var(--primary)); }
+        /* * --------------------------------------------------------------------------
+         * EKRAN YÖNETİMİ (GİRİŞ, SINAV, SONUÇ)
+         * --------------------------------------------------------------------------
+         */
+        .screen {
+            padding: 40px;
+            display: none; /* Varsayılan olarak gizli */
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+            height: 100%;
+        }
 
-    /* --- MODALS --- */
-    .modal {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-        z-index: 100; visibility: hidden; opacity: 0; transition: 0.3s;
-        display: flex; align-items: center; justify-content: center;
-        padding: 20px;
-    }
-    .modal.open { visibility: visible; opacity: 1; }
+        .screen.active {
+            display: flex;
+        }
 
-    /* Result Card Specific */
-    .result-card {
-        background: #1e293b; width: 100%; max-width: 400px;
-        border-radius: 30px; padding: 30px; text-align: center;
-        border: 1px solid rgba(255,255,255,0.1);
-        transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .modal.open .result-card { transform: scale(1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    /* Grid Modal Specific */
-    .modal-sheet {
-        position: absolute; bottom: 0; left: 0;
-        background: #1e293b; width: 100%; border-radius: 24px 24px 0 0;
-        padding: 25px 20px calc(20px + var(--safe-bottom)) 20px;
-        transform: translateY(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        max-height: 80vh; overflow-y: auto;
-    }
-    .modal.open .modal-sheet { transform: translateY(0); }
+        /* GİRİŞ EKRANI */
+        .welcome-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-    .grid-cell { 
-        aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 8px; 
-        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;
-    }
-    .grid-cell.c { background: var(--success); color: #fff; }
-    .grid-cell.w { background: var(--danger); color: #fff; }
-    .grid-cell.active { border: 2px solid #fff; }
+        .welcome-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
 
-    /* --- BUTTONS --- */
-    .btn-grad {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: #fff; border: none; padding: 16px; width: 100%;
-        border-radius: 16px; font-weight: 700; font-size: 1rem;
-        box-shadow: 0 10px 20px -5px var(--primary-glow);
-        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-grad:active { transform: scale(0.97); }
+        .welcome-hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
 
-</style>
+        .exam-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .selection-card {
+            background: var(--bg-body);
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .selection-card i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .selection-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .selection-card .details {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .btn-start {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .btn-start:hover {
+            background: var(--accent-hover);
+        }
+
+        /* SINAV EKRANI */
+        #quiz-screen {
+            align-items: stretch; /* Sola yaslı içerik */
+            text-align: left;
+            position: relative;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .timer-box {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-meta {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--primary);
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 1rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .option-btn .opt-label {
+            font-weight: 800;
+            margin-right: 15px;
+            min-width: 25px;
+            color: var(--accent);
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #ebf8ff;
+        }
+
+        /* Doğru/Yanlış Durumları */
+        .option-btn.correct {
+            border-color: var(--success);
+            background-color: #f0fff4;
+            color: var(--success);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error);
+            background-color: #fff5f5;
+            color: var(--error);
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* SONUÇ EKRANI */
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .result-details {
+            width: 100%;
+            margin-top: 20px;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* * --------------------------------------------------------------------------
+         * FOOTER
+         * --------------------------------------------------------------------------
+         */
+        footer {
+            background: var(--primary);
+            color: #a0aec0;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: auto;
+            border-top: 5px solid var(--accent);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .designer-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 25px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .insta-btn {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .insta-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* * --------------------------------------------------------------------------
+         * RESPONSIVE
+         * --------------------------------------------------------------------------
+         */
+        @media (max-width: 768px) {
+            .ticker-item { padding: 0 1rem; font-size: 0.8rem; }
+            .screen { padding: 20px; }
+            .welcome-hero h1 { font-size: 1.8rem; }
+            .question-text { font-size: 1.1rem; }
+            .timer-box { font-size: 1rem; }
+        }
+
+    </style>
 </head>
 <body>
 
-<div class="bg-mesh"></div>
-<div id="particles-container"></div>
-
-<div class="ticker-container">
-    <div class="ticker-content" id="ticker-track"></div>
-    <div class="ticker-content" id="ticker-track-2"></div> 
-</div>
-
-<div class="app-container">
-    
-    <div id="view-dashboard" class="scroll-view fade-in">
-        <div class="header-row">
-            <div>
-                <div class="brand-title">ŞEKERKERIM</div>
-                <div style="font-size:0.7rem; color:var(--primary); letter-spacing:2px; font-weight:700;">PLATINUM SECURITY</div>
-            </div>
-            <div style="text-align:right;">
-                 <div id="user-pill" style="background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:15px; font-size:0.7rem; border:1px solid var(--glass-border);">⭐ Misafir</div>
-            </div>
+    <header>
+        <div class="ticker-wrapper">
+            <div class="ticker-content">
+                </div>
         </div>
+    </header>
 
-        <div class="card">
-            <h2 style="margin:0 0 10px 0;">Operasyon Başlasın 🚀</h2>
-            <p style="color:var(--text-dim); font-size:0.9rem; margin-bottom:20px;">Bugün hangi alanda kendini test etmek istersin?</p>
+    <main>
+        <div class="app-container">
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <button onclick="startExam('silahsız')" style="background:rgba(6,182,212,0.1); border:1px solid var(--primary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px; filter: drop-shadow(0 0 10px var(--primary));">🛡️</div>
-                    <div style="font-weight:700;">Silahsız</div>
-                    <div style="font-size:0.7rem; opacity:0.7;">100 Soru</div>
+            <div id="start-screen" class="screen active">
+                <div class="welcome-hero">
+                    <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
+                    <h1>ÖGG SINAV SİSTEMİ</h1>
+                    <p>Lütfen girmek istediğiniz sınav türünü seçiniz.</p>
+                </div>
+
+                <div class="exam-cards">
+                    <div class="selection-card" onclick="examSystem.startExam('weapon')">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>SİLAHLI SINAV</h3>
+                        <div class="details">
+                            <p><i class="fas fa-list-ol"></i> 100 Temel + 25 Silah</p>
+                            <p><i class="fas fa-clock"></i> 120 Dakika</p>
+                        </div>
+                        <button class="btn-start">Sınava Başla</button>
+                    </div>
+
+                    <div class="selection-card" onclick="examSystem.startExam('basic')">
+                        <i class="fas fa-user-shield"></i>
+                        <h3>SİLAHSIZ SINAV</h3>
+                        <div class="details">
+                            <p><i class="fas fa-list-ol"></i> 100 Temel Soru</p>
+                            <p><i class="fas fa-clock"></i> 120 Dakika</p>
+                        </div>
+                        <button class="btn-start" style="background: var(--secondary);">Sınava Başla</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-screen" class="screen">
+                <div class="quiz-header">
+                    <div class="question-meta">
+                        <span id="current-q-num">1</span> / <span id="total-q-num">100</span>
+                    </div>
+                    <div class="timer-box">
+                        <i class="far fa-clock"></i>
+                        <span id="timer-display">120:00</span>
+                    </div>
+                </div>
+
+                <div id="question-container">
+                    <h2 class="question-text" id="q-text">Soru Yükleniyor...</h2>
+                    <div class="options-list" id="opt-list">
+                        </div>
+                </div>
+
+                <div style="margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end;">
+                    <button class="btn-start" id="next-btn" style="width: auto; padding-left: 40px; padding-right: 40px;" disabled onclick="examSystem.nextQuestion()">
+                        Sonraki Soru <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="screen">
+                <div id="result-icon-container"></div>
+                <h1 id="result-title">Sınav Tamamlandı</h1>
+                
+                <div class="score-circle">
+                    <span id="final-score">0</span>
+                </div>
+
+                <div class="result-details">
+                    <div class="result-row">
+                        <span>Doğru Sayısı:</span>
+                        <strong id="r-correct" style="color: var(--success)">0</strong>
+                    </div>
+                    <div class="result-row">
+                        <span>Yanlış Sayısı:</span>
+                        <strong id="r-wrong" style="color: var(--error)">0</strong>
+                    </div>
+                    <div class="result-row">
+                        <span>Boş Sayısı:</span>
+                        <strong id="r-empty">0</strong>
+                    </div>
+                    <div class="result-row" style="border:none;">
+                        <span>Başarı Durumu:</span>
+                        <strong id="r-status">Hesaplanıyor...</strong>
+                    </div>
+                </div>
+
+                <button class="btn-start" style="margin-top: 30px;" onclick="location.reload()">
+                    <i class="fas fa-redo"></i> Yeni Sınav
                 </button>
-                <button onclick="startExam('silahlı')" style="background:rgba(139,92,246,0.1); border:1px solid var(--secondary); padding:20px; border-radius:16px; color:#fff; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:5px; filter: drop-shadow(0 0 10px var(--secondary));">🔫</div>
-                    <div style="font-weight:700;">Silahlı</div>
-                    <div style="font-size:0.7rem; opacity:0.7;">125 Soru</div>
-                </button>
             </div>
+
         </div>
+    </main>
 
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <h3>Performans Analizi</h3>
-                <span style="color:var(--primary); font-size:0.8rem; background:rgba(6,182,212,0.1); padding:3px 8px; border-radius:8px;">Son 5 Sınav</span>
+    <footer>
+        <div class="footer-content">
+            <div class="designer-badge">
+                <i class="fas fa-code"></i>
+                <span>Site Tasarımı: <b>Kerim Bayraktar</b></span>
             </div>
-            <div style="height:120px;"><canvas id="miniChart"></canvas></div>
-        </div>
-
-        <a href="https://www.instagram.com/kerimm.b" target="_blank" class="card" style="display:flex; align-items:center; gap:15px; text-decoration:none; color:white;">
-            <div style="background:var(--insta-grad); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">📸</div>
-            <div>
-                <div style="font-weight:700;">Beni Takip Et</div>
-                <div style="font-size:0.8rem; color:var(--text-dim);">@kerimm.b - Sorularını Sor!</div>
-            </div>
-        </a>
-    </div>
-
-    <div id="view-exam" class="scroll-view hidden">
-        <div class="header-row">
-            <div style="display:flex; flex-direction:column;">
-                <span style="font-size:0.7rem; color:var(--text-dim);">İLERLEME</span>
-                <span style="font-size:1.2rem; font-weight:800;" id="q-progress">1 / 100</span>
-            </div>
-            <div class="streak-badge" id="streak-box">🔥 3 Seri!</div>
-            <div style="font-family:monospace; font-size:1.2rem; font-weight:700; color:var(--text);" id="timer">120:00</div>
-        </div>
-
-        <div class="card question-card" id="q-card">
-            <div class="swipe-hint swipe-left">‹</div>
-            <div class="swipe-hint swipe-right">›</div>
             
-            <div class="q-badge" id="q-cat">HUKUK</div>
-            <div class="q-text" id="q-text">Yükleniyor...</div>
-        </div>
-
-        <div id="options-list"></div>
-
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="toggleGrid()" style="flex:1; background:rgba(255,255,255,0.1); border:none; color:#fff; padding:15px; border-radius:12px;">🗺️ Harita</button>
-            <button onclick="nextQuestion()" class="btn-grad" style="flex:2;">Sonraki ➡</button>
-        </div>
-    </div>
-
-    <div id="view-profile" class="scroll-view hidden fade-in">
-        <div style="text-align:center; padding:30px 0;">
-             <div style="width:100px; height:100px; background:linear-gradient(45deg, #06b6d4, #8b5cf6); border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; box-shadow:0 0 30px var(--primary-glow); border:4px solid rgba(255,255,255,0.1);">👮‍♂️</div>
-             <h2 id="profile-name">İsimsiz</h2>
-             <div id="profile-rank" style="color:var(--gold); font-weight:bold; font-size:0.9rem; margin-top:5px;">ACEMİ ADAY</div>
-        </div>
-
-        <div class="card">
-            <label style="font-size:0.8rem; color:var(--text-dim);">KOD ADINI GÜNCELLE</label>
-            <input type="text" id="name-input" placeholder="Ad Soyad..." style="width:100%; padding:15px; background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); color:#fff; border-radius:10px; margin-top:5px;" oninput="updateName(this.value)">
-        </div>
-
-        <div class="card">
-            <h3>İletişim & Destek</h3>
-            <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:15px;">Yeni sorular, tüyolar ve canlı yayınlar için:</p>
-            
-            <a href="https://www.instagram.com/kerimm.b" target="_blank" class="insta-btn" onclick="confetti({particleCount:50, origin:{y:0.8}})">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                Instagram'da Takip Et
+            <a href="https://www.instagram.com/kerimm.b" target="_blank" class="insta-btn">
+                <i class="fab fa-instagram"></i>
+                kerimm.b
             </a>
+            
+            <p style="font-size: 0.8rem; margin-top: 10px;">
+                © 2024 Özel Güvenlik Eğitim Sistemi. Tüm Hakları Saklıdır.
+            </p>
         </div>
+    </footer>
 
-        <div class="card">
-            <h3>VIP Üye Listesi</h3>
-            <p style="font-size:0.8rem; color:var(--text-dim);">Bu uygulama aşağıdaki kahramanlara ithaf edilmiştir:</p>
-            <div style="font-size:0.8rem; line-height:1.6; color:#ccc; margin-top:10px;" id="static-vip-list"></div>
-        </div>
-    </div>
-
-</div>
-
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        Anasayfa
-    </div>
-    <div class="nav-item" onclick="switchTab('exam')" id="nav-exam">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-        Sınav
-    </div>
-    <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        Profil
-    </div>
-</nav>
-
-<div class="modal" id="grid-modal" onclick="if(event.target===this) toggleGrid()">
-    <div class="modal-sheet">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h3>Soru Haritası</h3>
-            <button onclick="finishExam()" style="background:var(--danger); color:#fff; border:none; padding:8px 20px; border-radius:10px; font-weight:bold;">SINAVI BİTİR</button>
-        </div>
-        <div class="grid-box" id="grid-content"></div>
-    </div>
-</div>
-
-<div class="modal" id="result-modal">
-    <div class="result-card">
-        <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
-        <h2 style="margin-bottom:5px;">Sınav Tamamlandı!</h2>
-        <p id="res-msg" style="color:var(--text-dim); margin-bottom:20px;">Performansın hesaplandı.</p>
-        
-        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-bottom:20px;">
-            <div style="font-size:2.5rem; font-weight:900; color:var(--primary);" id="res-score">85</div>
-            <div style="font-size:0.8rem; letter-spacing:1px;">PUAN</div>
-        </div>
-
-        <div style="display:flex; justify-content:space-around; margin-bottom:25px; font-size:0.9rem;">
-            <div style="color:var(--success);">✅ <span id="res-correct">0</span> Doğru</div>
-            <div style="color:var(--danger);">❌ <span id="res-wrong">0</span> Yanlış</div>
-        </div>
-
-        <a href="https://www.instagram.com/kerimm.b" target="_blank" class="insta-btn" style="margin-bottom:10px;">
-            📸 Sonucu Paylaş (Instagram)
-        </a>
-        <button onclick="closeResult()" style="background:transparent; border:1px solid var(--text-dim); color:var(--text-dim); padding:12px; width:100%; border-radius:12px;">Kapat</button>
-    </div>
-</div>
-
-<script>
-    // --- PARTICLE BACKGROUND SYSTEM ---
-    function createParticles() {
-        const container = document.getElementById('particles-container');
-        for(let i=0; i<15; i++){
-            const p = document.createElement('div');
-            p.className = 'particle';
-            const size = Math.random() * 5 + 2;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            p.style.animationDelay = (Math.random() * 5) + 's';
-            container.appendChild(p);
-        }
-    }
-    createParticles();
-
-    // --- VIP LISTESI ---
-    const vipNames = [
-        "ABDUL SAMET", "FURKAN UÇAR", "TUĞBA SUDEM", "İZNİKLİ GÜVENLİK", 
-        "MELİH SAK", "MELİH ÖZAY", "MUHAMMED KONUS", "RAZİYE KAVRAMAK", 
-        "BAŞKOM NURULLAH", "YAKIŞIKLI GÜVENLİK OKAN", "AHMET CAN ÇEVİK", 
-        "BARAN", "BERİL KAYA", "CELAL SAHAN", "EMİN", "EMRE", "ETO", 
-        "HATİCE", "İSMAİL", "RABİA", "SERHAT OLGUN", "SİNAN", "YAĞMUR", "VE DİĞERLERİ..."
-    ];
-
-    // --- AUDIO SYSTEM ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(type) {
-        if(audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        if (type === 'correct') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        } else if (type === 'wrong') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.2);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        }
-    }
-
-    // --- DATA ---
-    const rawQuestions = [
-        const rawQuestions = [
-
-/* ===================== HUKUK (30) ===================== */
-{c:"HUKUK",q:"5188 sayılı Kanuna göre özel güvenlik görevlisinin görev alanı neresi ile sınırlıdır?",o:["İl sınırları","Belediye sınırları","Türkiye geneli","Görevli olduğu alan","Valilik sınırı"],a:3},
-{c:"HUKUK",q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanabilir?",o:["Herkese","Şüpheli durumlarda","Evde","Keyfi","Sadece amirine"],a:1},
-{c:"HUKUK",q:"ÖGG aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Zor kullanma","Emanete alma","İfade alma","Kimlik sorma"],a:3},
-{c:"HUKUK",q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?",o:["2","3","4","5","Süresiz"],a:3},
-{c:"HUKUK",q:"Yakalanan kişi en geç ne zaman genel kolluğa teslim edilir?",o:["1 saat","Derhal","12 saat","24 saat","48 saat"],a:1},
-{c:"HUKUK",q:"Zor kullanmada temel ilke hangisidir?",o:["Keyfilik","Orantılılık","İntikam","Süreklilik","Ceza"],a:1},
-{c:"HUKUK",q:"ÖGG yetkilerini hangi kanundan alır?",o:["TCK","CMK","5188","2559","5442"],a:2},
-{c:"HUKUK",q:"Özel güvenlik görevlisi yetkilerini nerede kullanır?",o:["Her yerde","Görev alanında","İl genelinde","Sokakta","Evinde"],a:1},
-{c:"HUKUK",q:"ÖGG arama yapabilmesi için hangi şart gerekir?",o:["Keyfi","Hakim kararı","Şüphe","Talep","Emir"],a:2},
-{c:"HUKUK",q:"ÖGG kimlik kartını nerede taşır?",o:["Cebinde","Görev alanında görünür","Araçta","Kasada","Evde"],a:1},
-
-/* ===================== İLETİŞİM (15) ===================== */
-{c:"İLETİŞİM",q:"Empati kavramı neyi ifade eder?",o:["Acıma","Karşıdakini dinleme","Kendini onun yerine koyma","Öğüt verme","Yargılama"],a:2},
-{c:"İLETİŞİM",q:"Etkili iletişimin en önemli unsuru hangisidir?",o:["Ses tonu","Beden dili","Kıyafet","Statü","Mekan"],a:1},
-{c:"İLETİŞİM",q:"Öfke kontrolünde ilk yapılması gereken nedir?",o:["Bağırmak","Uzaklaşmak","Tehdit etmek","Saldırmak","Suçlamak"],a:1},
-{c:"İLETİŞİM",q:"İletişimde geri bildirim ne sağlar?",o:["Ceza","Anlaşılma","Kargaşa","Baskı","Üstünlük"],a:1},
-
-/* ===================== İLK YARDIM (25) ===================== */
-{c:"İLK YARDIM",q:"Bebeklerde bilinç kontrolü nasıl yapılır?",o:["Sarsarak","Topuklarına vurarak","Seslenerek","Su dökerek","Tokat atarak"],a:1},
-{c:"İLK YARDIM",q:"Solunumu olmayan yetişkinde ilk yapılacak işlem nedir?",o:["Kalp masajı","Suni solunum","Hava yolunu açmak","Turnike","Su içirmek"],a:2},
-{c:"İLK YARDIM",q:"Turnike hangi durumda uygulanır?",o:["Burun kanaması","Uzuv kopması","Yanık","Kırık","Bayılma"],a:1},
-{c:"İLK YARDIM",q:"Kalp masajı dakikada kaç kez yapılır?",o:["60","80","100-120","140","160"],a:2},
-{c:"İLK YARDIM",q:"Bilinç kapalı, solunumu olan kazazedeye ne yapılır?",o:["Sırtüstü yatırılır","Yan yatırılır","Ayağa kaldırılır","Su içirilir","Masaj yapılır"],a:1},
-
-/* ===================== SİLAH (20) ===================== */
-{c:"SİLAH",q:"Fişek yatağında fişek olduğunu gösteren sistem hangisidir?",o:["Şarjör emniyeti","Kabza emniyeti","İkaz pimi","Horoz","Gez"],a:2},
-{c:"SİLAH",q:"Tetiğe basıldığında horozu düşüren parça hangisidir?",o:["İğne","Namlu","Tetik manivelası","Arpacık","Gez"],a:2},
-{c:"SİLAH",q:"Silah taşırken en güvenli durum hangisidir?",o:["Dolu","Yarı dolu","Şarjör takılı fişek yatağı boş","Horoz kurulu","Emniyet kapalı"],a:2},
-
-/* ===================== YANGIN (10) ===================== */
-{c:"YANGIN",q:"Elektrik yangınlarında hangisi kullanılmaz?",o:["CO2","Kuru kimyevi toz","Su","Halokarbon","Köpük"],a:2},
-{c:"YANGIN",q:"Yangının oluşması için gerekli üç unsur hangisidir?",o:["Isı-Oksijen-Yakıt","Su-Duman-Isı","Alev-Hava","Basınç","Kömür"],a:0},
-
-/* ===================== GÜVENLİK & KORUMA (15) ===================== */
-{c:"GÜVENLİK",q:"Devriyenin temel amacı nedir?",o:["Ceza vermek","Caydırıcılık sağlamak","Kavga etmek","Kimlik toplamak","Şikayet almak"],a:1},
-{c:"KORUMA",q:"VIP korumada birinci öncelik hangisidir?",o:["Saldırganı yakalamak","Basınla konuşmak","Kişiyi tehlikeden uzaklaştırmak","Silah kullanmak","Yolu kapatmak"],a:2},
-{c:"KORUMA",q:"360 derece koruma neyi ifade eder?",o:["Ön koruma","Yan koruma","Arka koruma","Her yönden koruma","Araç koruması"],a:3}
-
-];
-    // --- APP STATE ---
-    let app = {
-        questions: [],
-        answers: [],
-        idx: 0,
-        timer: null,
-        timeLeft: 0,
-        streak: 0,
-        user: localStorage.getItem('sk_user') || 'Aday',
-        rank: localStorage.getItem('sk_rank') || 'ACEMİ ADAY'
-    };
-
-    // --- INIT ---
-    window.onload = () => {
-        // Ticker
-        const track = document.getElementById('ticker-track');
-        let html = '';
-        vipNames.forEach(n => html += `<div class="ticker-item">⭐ ${n}</div>`);
-        track.innerHTML = html;
-        document.getElementById('ticker-track-2').innerHTML = html;
-
-        // Profile
-        updateUI();
-
-        // Static List
-        document.getElementById('static-vip-list').innerHTML = vipNames.join(' • ');
-
-        initChart();
-        setupSwipe();
-    };
-
-    function updateUI() {
-        document.getElementById('name-input').value = app.user;
-        document.getElementById('profile-name').innerText = app.user;
-        document.getElementById('user-pill').innerText = '👤 ' + app.user;
-        document.getElementById('profile-rank').innerText = app.rank;
-    }
-
-    // --- NAVIGATION ---
-    function switchTab(tab) {
-        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-        document.getElementById(`nav-${tab}`).classList.add('active');
-        ['dashboard', 'exam', 'profile'].forEach(t => {
-            const el = document.getElementById(`view-${t}`);
-            if(t === tab) el.classList.remove('hidden');
-            else el.classList.add('hidden');
-        });
-    }
-
-    // --- EXAM LOGIC ---
-    function startExam(type) {
-        let pool = [];
-        const count = type === 'silahsız' ? 100 : 125;
-        while(pool.length < count) pool.push(...rawQuestions); // Demo çoğaltma
-        pool = pool.slice(0, count).sort(() => Math.random() - 0.5);
-
-        app.questions = pool;
-        app.answers = new Array(count).fill(null);
-        app.idx = 0;
-        app.streak = 0;
-        app.timeLeft = (type === 'silahsız' ? 120 : 150) * 60;
-        
-        document.querySelector('.bottom-nav').classList.add('hidden');
-        switchTab('exam');
-        renderQuestion();
-        
-        if(app.timer) clearInterval(app.timer);
-        app.timer = setInterval(tick, 1000);
-    }
-
-    function tick() {
-        app.timeLeft--;
-        const m = Math.floor(app.timeLeft / 60);
-        const s = app.timeLeft % 60;
-        document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
-        if(app.timeLeft <= 0) finishExam();
-    }
-
-    function renderQuestion() {
-        const q = app.questions[app.idx];
-        const ans = app.answers[app.idx];
-
-        document.getElementById('q-progress').innerText = `${app.idx + 1} / ${app.questions.length}`;
-        document.getElementById('q-cat').innerText = q.c;
-        document.getElementById('q-text').innerText = q.q;
-
-        const list = document.getElementById('options-list');
-        list.innerHTML = '';
-
-        q.o.forEach((opt, i) => {
-            const div = document.createElement('div');
-            let cls = 'option';
-            if(ans) {
-                if(i === q.a) cls += ' correct';
-                else if(i === ans.given) cls += ' wrong';
-                div.style.pointerEvents = 'none';
-            }
-            div.className = cls;
-            div.innerHTML = `<div class="opt-char">${String.fromCharCode(65+i)}</div> ${opt}`;
-            if(!ans) div.onclick = () => selectAnswer(i, q.a);
-            list.appendChild(div);
-        });
-
-        document.querySelector('.swipe-left').style.opacity = app.idx > 0 ? 0.3 : 0;
-        document.querySelector('.swipe-right').style.opacity = app.idx < app.questions.length-1 ? 0.3 : 0;
-    }
-
-    function selectAnswer(given, correct) {
-        const isCorrect = given === correct;
-        app.answers[app.idx] = { given, correct: isCorrect };
-        
-        if(isCorrect) {
-            app.streak++;
-            playSound('correct');
-            if(app.streak > 2) showStreak();
-        } else {
-            app.streak = 0;
-            playSound('wrong');
-            if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
-            hideStreak();
-        }
-        renderQuestion();
-    }
-
-    function showStreak() {
-        const badge = document.getElementById('streak-box');
-        badge.innerText = `🔥 ${app.streak} Seri!`;
-        badge.classList.add('active');
-    }
-    function hideStreak() {
-        document.getElementById('streak-box').classList.remove('active');
-    }
-
-    function nextQuestion() {
-        if(app.idx < app.questions.length - 1) {
-            app.idx++;
-            renderQuestion();
-        } else {
-            toggleGrid();
-        }
-    }
-    
-    function prevQuestion() {
-        if(app.idx > 0) {
-            app.idx--;
-            renderQuestion();
-        }
-    }
-
-    function setupSwipe() {
-        let touchStartX = 0;
-        let touchEndX = 0;
-        const card = document.getElementById('q-card');
-
-        card.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-        card.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 50) nextQuestion();
-            if (touchEndX > touchStartX + 50) prevQuestion();
-        });
-    }
-
-    function toggleGrid() {
-        const modal = document.getElementById('grid-modal');
-        const content = document.getElementById('grid-content');
-        
-        if(modal.classList.contains('open')) {
-            modal.classList.remove('open');
-        } else {
-            content.innerHTML = '';
-            app.answers.forEach((ans, i) => {
-                const div = document.createElement('div');
-                let cls = 'grid-cell';
-                if(i === app.idx) cls += ' active';
-                if(ans) cls += ans.correct ? ' c' : ' w';
-                div.className = cls;
-                div.innerText = i + 1;
-                div.onclick = () => {
-                    app.idx = i;
-                    renderQuestion();
-                    toggleGrid();
-                };
-                content.appendChild(div);
-            });
-            modal.classList.add('open');
-        }
-    }
-
-    function finishExam() {
-        clearInterval(app.timer);
-        document.getElementById('grid-modal').classList.remove('open');
-        
-        const correct = app.answers.filter(a => a && a.correct).length;
-        const score = (correct / app.questions.length) * 100;
-        
-        // Update Chart
-        updateChart(score);
-        
-        // Determine Rank
-        let msg = "Daha çok çalışmalısın.";
-        if(score >= 60) { msg = "Geçtin! Tebrikler."; app.rank = "UZMAN YARDIMCISI"; }
-        if(score >= 80) { msg = "Harika iş çıkardın!"; app.rank = "ÖZEL TİM"; }
-        if(score >= 90) { msg = "Mükemmel sonuç!"; app.rank = "👑 BAŞKOMİSER"; }
-        localStorage.setItem('sk_rank', app.rank);
-        updateUI();
-
-        // Show Custom Modal
-        document.getElementById('res-score').innerText = score.toFixed(0);
-        document.getElementById('res-correct').innerText = correct;
-        document.getElementById('res-wrong').innerText = app.answers.filter(a => a && !a.correct).length;
-        document.getElementById('res-msg').innerText = msg;
-        
-        document.getElementById('result-modal').classList.add('open');
-
-        if(score >= 60) {
-            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-        }
-    }
-
-    function closeResult() {
-        document.getElementById('result-modal').classList.remove('open');
-        document.querySelector('.bottom-nav').classList.remove('hidden');
-        switchTab('dashboard');
-    }
-
-    // --- PROFILE ---
-    function updateName(val) {
-        app.user = val;
-        localStorage.setItem('sk_user', val);
-        updateUI();
-    }
-
-    let myChart;
-    function initChart() {
-        const ctx = document.getElementById('miniChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['1', '2', '3', '4', '5'],
-                datasets: [{
-                    label: 'Puan',
-                    data: [50, 65, 55, 80, 70],
-                    borderColor: '#06b6d4',
-                    backgroundColor: (ctx) => {
-                        const bg = ctx.chart.ctx.createLinearGradient(0,0,0,200);
-                        bg.addColorStop(0, 'rgba(6,182,212,0.4)');
-                        bg.addColorStop(1, 'rgba(6,182,212,0)');
-                        return bg;
-                    },
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#fff'
-                }]
+    <script>
+        /**
+         * SORU BANKASI (VERİTABANI)
+         * Bu bölümü istediğiniz kadar çoğaltarak 2000 satıra ulaşabilirsiniz.
+         * Type: 'basic' (Temel) veya 'weapon' (Silah)
+         */
+        const QUESTION_BANK = [
+            // --- TEMEL SORULAR (BASIC) ---
+            {
+                id: 1, type: 'basic',
+                text: "5188 sayılı Özel Güvenlik Hizmetlerine Dair Kanun'a göre, özel güvenlik görevlisi kimlik kartını başkasına kullandıran görevliye ne ceza verilir?",
+                options: ["Hapis cezası", "İdari para cezası ve kimlik kartının iptali", "Sadece uyarı", "Maaş kesintisi", "Yer değişikliği"],
+                correct: 1
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } }
+            {
+                id: 2, type: 'basic',
+                text: "Yangın söndürme cihazlarının kullanımı sırasında, rüzgarın durumu nasıl olmalıdır?",
+                options: ["Rüzgar arkaya alınmalıdır", "Rüzgar karşıya alınmalıdır", "Rüzgar sağa alınmalıdır", "Rüzgar sola alınmalıdır", "Fark etmez"],
+                correct: 0
+            },
+            {
+                id: 3, type: 'basic',
+                text: "Temel yaşam desteği (CPR) yetişkinlerde dakikada kaç bası olacak şekilde uygulanır?",
+                options: ["60-80", "80-100", "100-120", "120-140", "50-60"],
+                correct: 2
+            },
+            {
+                id: 4, type: 'basic',
+                text: "X-ray cihazları hangi amaçla kullanılır?",
+                options: ["Kişilerin üst aramasında", "Paket ve bagajların içinin görüntülenmesinde", "Kimlik tespiti yapmakta", "Patlayıcı kokusu almakta", "Ses kaydı yapmakta"],
+                correct: 1
+            },
+            {
+                id: 5, type: 'basic',
+                text: "Aşağıdakilerden hangisi biyolojik delildir?",
+                options: ["Kovan", "Parmak izi", "Kan", "Ayak izi", "Lastik izi"],
+                correct: 2
+            },
+            {
+                id: 6, type: 'basic',
+                text: "Özel güvenlik görevlileri görev alanında bir suçla karşılaştıklarında ne yapmalıdır?",
+                options: ["Suçu görmezden gelmeli", "Suç delillerini yok etmeli", "Olay yerini korumalı ve genel kolluğa haber vermeli", "Sadece amirine haber vermeli", "Olay yerinden uzaklaşmalı"],
+                correct: 2
+            },
+            {
+                id: 7, type: 'basic',
+                text: "Aşağıdakilerden hangisi devriye yöntemlerinden biri değildir?",
+                options: ["Olağan devriye", "Dairesel devriye", "Geri dönüşlü devriye", "Planlı devriye", "Sabit devriye"],
+                correct: 4
+            },
+            {
+                id: 8, type: 'basic',
+                text: "Kalabalık yönetiminde 'çember düzeni' hangi amaçla kullanılır?",
+                options: ["Bir şahsı korumak veya grubu kontrol altına almak", "Topluluğu dağıtmak", "Yol açmak", "Saldırı düzenlemek", "Kaçmak"],
+                correct: 0
+            },
+            {
+                id: 9, type: 'basic',
+                text: "İl özel güvenlik komisyonu başkanı kimdir?",
+                options: ["İl Emniyet Müdürü", "Vali Yardımcısı", "Belediye Başkanı", "Jandarma Komutanı", "Cumhuriyet Başsavcısı"],
+                correct: 1
+            },
+            {
+                id: 10, type: 'basic',
+                text: "Özel güvenlik görevlilerinin yetkileri, hangi kanunla belirlenmiştir?",
+                options: ["2559 Sayılı Kanun", "5188 Sayılı Kanun", "4857 Sayılı Kanun", "5237 Sayılı Kanun", "6136 Sayılı Kanun"],
+                correct: 1
+            },
+            {
+                id: 11, type: 'basic',
+                text: "Görev alanında buluntu eşya ile karşılaşan özel güvenlik görevlisi ne yapmalıdır?",
+                options: ["Eşyayı sahibine vermeli", "Tutanakla teslim alıp muhafaza etmeli", "Çöpe atmalı", "Kendisi kullanmalı", "Görmezden gelmeli"],
+                correct: 1
+            },
+            {
+                id: 12, type: 'basic',
+                text: "Şok pozisyonunda ayaklar yerden ne kadar yukarı kaldırılır?",
+                options: ["10 cm", "20 cm", "30 cm", "50 cm", "1 metre"],
+                correct: 2
+            },
+            {
+                id: 13, type: 'basic',
+                text: "Aşağıdakilerden hangisi yangın sınıflandırmasında 'B Sınıfı' yangınlara örnektir?",
+                options: ["Kağıt yangınları", "Benzin, mazot yangınları", "Gaz yangınları", "Metal yangınları", "Elektrik yangınları"],
+                correct: 1
+            },
+            {
+                id: 14, type: 'basic',
+                text: "Telsiz konuşmalarında anlaşılmayan kelimeler için ne kullanılır?",
+                options: ["Bağırmak", "Tekrar etmek", "Fonetik alfabe ile kodlama", "Hızlı konuşmak", "Başka dile geçmek"],
+                correct: 2
+            },
+            {
+                id: 15, type: 'basic',
+                text: "Zor kullanma yetkisinin en son aşaması nedir?",
+                options: ["Bedeni kuvvet", "Maddi güç", "Silah kullanma", "Sözlü uyarı", "Kelepçe takma"],
+                correct: 2
+            },
+            
+            // ... BURAYA 1000 TANE DAHA TEMEL SORU EKLEYEBİLİRSİNİZ ...
+            
+            // --- SİLAH BİLGİSİ SORULARI (WEAPON) ---
+            {
+                id: 101, type: 'weapon',
+                text: "Aşağıdakilerden hangisi silahın ana parçalarından biri değildir?",
+                options: ["Namlu", "Sürgü", "Çerçeve (Gövde)", "Horoz", "Harbi"],
+                correct: 4
+            },
+            {
+                id: 102, type: 'weapon',
+                text: "Fişeğin ateşlenmesi için darbeyi kapsüle ileten parçaya ne ad verilir?",
+                options: ["Tırnak", "İğne", "Gez", "Arpacık", "Şarjör"],
+                correct: 1
+            },
+            {
+                id: 103, type: 'weapon',
+                text: "Atış sırasında 'Gez ve arpacık net, hedef bulanık' görülüyorsa bu duruma ne denir?",
+                options: ["Hatalı nişan", "Doğru nişan", "Nefes kontrolü", "Tetik ezme", "Kabza kavrama"],
+                correct: 1
+            },
+            {
+                id: 104, type: 'weapon',
+                text: "Tabancada şarjörün yuvası neresidir?",
+                options: ["Namlu", "Sürgü", "Kabza (Gövde)", "Horoz", "Tetik"],
+                correct: 2
+            },
+            {
+                id: 105, type: 'weapon',
+                text: "Kovan atma tertibatı nelerden oluşur?",
+                options: ["Tırnak ve Çıkarıcı", "Gez ve Arpacık", "Tetik ve Horoz", "Namlu ve Yiv", "Şarjör ve Yay"],
+                correct: 0
+            },
+            {
+                id: 106, type: 'weapon',
+                text: "Yiv ve setin çekirdek üzerinde bıraktığı izlere ne ad verilir?",
+                options: ["Rayyür", "Hatve", "Çap", "Kovan", "Barut izi"],
+                correct: 0
+            },
+            {
+                id: 107, type: 'weapon',
+                text: "Aşağıdakilerden hangisi fişeği oluşturan parçalardan değildir?",
+                options: ["Kovan", "Kapsül", "Barut", "Çekirdek", "Namlu"],
+                correct: 4
+            },
+            {
+                id: 108, type: 'weapon',
+                text: "Silah temizliğinde kullanılan yağa ne ad verilir?",
+                options: ["Motor yağı", "Zeytinyağı", "Silah yağı", "Gres yağı", "Hidrolik yağ"],
+                correct: 2
+            },
+            {
+                id: 109, type: 'weapon',
+                text: "6136 sayılı kanun ne hakkındadır?",
+                options: ["Özel Güvenlik", "Ateşli Silahlar ve Bıçaklar", "Polis Vazife ve Salahiyet", "İş Kanunu", "Trafik Kanunu"],
+                correct: 1
+            },
+            {
+                id: 110, type: 'weapon',
+                text: "Tetiği çektiğimizde horozun düşmesini engelleyen emniyet sistemi hangisidir?",
+                options: ["Şarjör emniyeti", "Kabza emniyeti", "Mandal emniyeti", "İğne emniyeti", "Horoz emniyeti"],
+                correct: 2
             }
-        });
-    }
-    
-    function updateChart(newScore) {
-        const data = myChart.data.datasets[0].data;
-        data.shift();
-        data.push(newScore);
-        myChart.update();
-    }
-</script>
+            // ... BURAYA DAHA FAZLA SİLAH SORUSU EKLENEBİLİR ...
+        ];
+
+        /*
+         * --------------------------------------------------------------------------
+         * EXAM SYSTEM ENGINE (SINAV MOTORU)
+         * --------------------------------------------------------------------------
+         */
+        class ExamSystem {
+            constructor() {
+                // Konfigürasyon
+                this.names = [
+                    "ABDUL SAMET", "FURKAN UÇAR", "TUĞBA SUDEM", "İZNİKLİ GÜVENLİK", 
+                    "MELİH SAK", "MELİH ÖZAY", "MUHAMMED KONUS", "RAZİYE KAVRAMAK", 
+                    "BAŞKOM NURULLAH", "YAKIŞIKLI GÜVENLİK OKAN", "AHMET CAN ÇEVİK", 
+                    "BARAN", "BERİL KAYA", "CELAL SAHAN", "EMİN", "EMRE", "ETO", 
+                    "HATİCE", "İSMAİL", "RABİA", "SERHAT OLGUN", "SİNAN", "YAĞMUR"
+                ];
+                
+                // Durum Değişkenleri
+                this.examMode = null; // 'basic' or 'weapon'
+                this.questions = [];
+                this.currentIndex = 0;
+                this.score = 0;
+                this.timer = 120 * 60; // 120 dakika (saniye)
+                this.interval = null;
+                this.answers = { correct: 0, wrong: 0, empty: 0 };
+
+                // Başlat
+                this.initTicker();
+            }
+
+            // Kayan Yazı Başlatıcı
+            initTicker() {
+                const tickerContent = document.querySelector('.ticker-content');
+                // Sonsuz döngü hissi için listeyi 3 kez kopyalıyoruz
+                const fullList = [...this.names, "VE DİĞERLERİ...", ...this.names, ...this.names];
+                
+                fullList.forEach(name => {
+                    const item = document.createElement('div');
+                    item.className = 'ticker-item';
+                    item.innerHTML = `<i class="fas fa-circle"></i> ${name}`;
+                    tickerContent.appendChild(item);
+                });
+            }
+
+            // Array Karıştırıcı (Fisher-Yates)
+            shuffle(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex != 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+            // Sınavı Başlat
+            startExam(mode) {
+                this.examMode = mode;
+                
+                // Soru Havuzunu Hazırla
+                let basicQs = QUESTION_BANK.filter(q => q.type === 'basic');
+                let weaponQs = QUESTION_BANK.filter(q => q.type === 'weapon');
+                
+                // Soruları Karıştır
+                basicQs = this.shuffle(basicQs);
+                weaponQs = this.shuffle(weaponQs);
+
+                // Moduna Göre Soru Seç
+                if (mode === 'basic') {
+                    // Sadece Temel (100 Soru veya havuz kadar)
+                    this.questions = basicQs.slice(0, 100); 
+                } else {
+                    // Silahlı (100 Temel + 25 Silah)
+                    const selectedBasic = basicQs.slice(0, 100);
+                    const selectedWeapon = weaponQs.slice(0, 25);
+                    this.questions = [...selectedBasic, ...selectedWeapon];
+                }
+
+                // Eğer yeterli soru yoksa eldekilerle devam et (Demo modu için)
+                if (this.questions.length === 0) {
+                    alert("Soru havuzunda yeterli soru yok! Lütfen script kısmına soru ekleyin.");
+                    return;
+                }
+
+                // Ekran Geçişi
+                document.getElementById('start-screen').classList.remove('active');
+                document.getElementById('quiz-screen').classList.add('active');
+
+                // Sıfırla
+                this.currentIndex = 0;
+                this.score = 0;
+                this.answers = { correct: 0, wrong: 0, empty: 0 };
+                
+                // Toplam soruyu güncelle
+                document.getElementById('total-q-num').innerText = this.questions.length;
+
+                this.renderQuestion();
+                this.startTimer();
+            }
+
+            // Soruyu Ekrana Bas
+            renderQuestion() {
+                const q = this.questions[this.currentIndex];
+                document.getElementById('current-q-num').innerText = this.currentIndex + 1;
+                document.getElementById('q-text').innerText = q.text;
+                
+                const optList = document.getElementById('opt-list');
+                optList.innerHTML = ''; // Temizle
+                
+                const labels = ['A', 'B', 'C', 'D', 'E'];
+
+                q.options.forEach((optText, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span class="opt-label">${labels[idx]})</span> ${optText}`;
+                    btn.onclick = () => this.checkAnswer(btn, idx, q.correct);
+                    optList.appendChild(btn);
+                });
+
+                document.getElementById('next-btn').disabled = true;
+            }
+
+            // Cevap Kontrolü
+            checkAnswer(btnElement, selectedIdx, correctIdx) {
+                const allOpts = document.querySelectorAll('.option-btn');
+                
+                // Tıklamayı engelle
+                allOpts.forEach(btn => btn.classList.add('disabled'));
+                allOpts.forEach(btn => btn.onclick = null);
+
+                if (selectedIdx === correctIdx) {
+                    // Doğru
+                    btnElement.classList.add('correct');
+                    this.score++; // Ham puan (basit hesap)
+                    this.answers.correct++;
+                } else {
+                    // Yanlış
+                    btnElement.classList.add('wrong');
+                    // Doğruyu göster
+                    allOpts[correctIdx].classList.add('correct');
+                    this.answers.wrong++;
+                }
+
+                document.getElementById('next-btn').disabled = false;
+            }
+
+            // Sonraki Soru
+            nextQuestion() {
+                this.currentIndex++;
+                if (this.currentIndex < this.questions.length) {
+                    // Animasyonlu geçiş efekti (isteğe bağlı)
+                    this.renderQuestion();
+                } else {
+                    this.finishExam();
+                }
+            }
+
+            // Sayaç
+            startTimer() {
+                const display = document.getElementById('timer-display');
+                this.interval = setInterval(() => {
+                    this.timer--;
+                    
+                    const min = Math.floor(this.timer / 60);
+                    const sec = this.timer % 60;
+                    
+                    display.innerText = `${min < 10 ? '0'+min : min}:${sec < 10 ? '0'+sec : sec}`;
+
+                    if (this.timer <= 0) {
+                        this.finishExam();
+                    }
+                }, 1000);
+            }
+
+            // Sınav Bitişi
+            finishExam() {
+                clearInterval(this.interval);
+                document.getElementById('quiz-screen').classList.remove('active');
+                document.getElementById('result-screen').classList.add('active');
+
+                // Puan Hesaplama (Basit: 100 üzerinden yüzde)
+                // Gerçek ÖGG puanlaması: Temel sorular 1 puan, Silah soruları 2 puan vs. olabilir.
+                // Burada basit yüzdelik hesaplıyoruz.
+                const totalQ = this.questions.length;
+                const finalScore = (this.score / totalQ) * 100;
+                
+                this.answers.empty = totalQ - (this.answers.correct + this.answers.wrong);
+
+                // UI Güncelleme
+                document.getElementById('final-score').innerText = Math.round(finalScore);
+                document.getElementById('r-correct').innerText = this.answers.correct;
+                document.getElementById('r-wrong').innerText = this.answers.wrong;
+                document.getElementById('r-empty').innerText = this.answers.empty;
+
+                const statusEl = document.getElementById('r-status');
+                const iconContainer = document.getElementById('result-icon-container');
+
+                if (finalScore >= 60) {
+                    statusEl.innerText = "BAŞARILI";
+                    statusEl.style.color = "var(--success)";
+                    iconContainer.innerHTML = '<i class="fas fa-trophy result-icon" style="color: #ecc94b;"></i>';
+                    document.getElementById('result-title').innerText = "Tebrikler!";
+                } else {
+                    statusEl.innerText = "BAŞARISIZ";
+                    statusEl.style.color = "var(--error)";
+                    iconContainer.innerHTML = '<i class="fas fa-times-circle result-icon" style="color: var(--error);"></i>';
+                    document.getElementById('result-title').innerText = "Maalesef...";
+                }
+            }
+        }
+
+        // Uygulamayı Başlat
+        const examSystem = new ExamSystem();
+
+    </script>
 </body>
 </html>
