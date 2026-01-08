@@ -455,18 +455,48 @@
 
     // --- DATA ---
     const rawQuestions = [
-        {c:"HUKUK", q:"5188 sayılı Kanuna göre özel güvenlik görevlisi aşağıdakilerden hangisini yapamaz?", o:["Yakalama","Emanete alma","Kimlik sorma","İfade alma","Zor kullanma"], a:3},
-        {c:"İLK YARDIM", q:"Bebeklerde bilinç kontrolü nasıl yapılır?", o:["Yanaklarına vurarak","Topuklarına vurarak","Sarsarak","Su dökerek","Seslenerek"], a:1},
-        {c:"SİLAH", q:"Fişek yatağında fişek olduğunu gösteren emniyet sistemi hangisidir?", o:["Şarjör emniyeti","Kabza emniyeti","İkaz pimi","Horoz emniyeti","Mandal emniyeti"], a:2},
-        {c:"İLETİŞİM", q:"Empati nedir?", o:["Sempati duymak","Karşıdakinin yerine kendini koymak","Akıl vermek","Dinlememek","Emir vermek"], a:1},
-        {c:"GÜVENLİK", q:"X-Ray cihazı temel olarak ne tespit eder?", o:["Patlayıcı","Uyuşturucu","Yoğunluk farkı (Metal vb.)","Plastik","Sıvı"], a:2},
-        {c:"YANGIN", q:"Elektrik yangınlarında hangisi KULLANILMAZ?", o:["Kuru toz","CO2","Su","Halokarbon","Köpük"], a:2},
-        {c:"KORUMA", q:"VIP korumada temel amaç nedir?", o:["Saldırganı öldürmek","Kişiyi kaçırmak/uzaklaştırmak","Kalabalığı dövmek","Yolu kapatmak","Medya ile konuşmak"], a:1},
-        {c:"HUKUK", q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?", o:["2","3","4","5","Süresizdir"], a:3},
-        {c:"SİLAH", q:"Tetiği çekince horozun düşmesini sağlayan parça?", o:["İğne","Gez","Arpacık","Tetik manivelası","Namlu"], a:3},
-        {c:"İLK YARDIM", q:"Turnike uygulaması hangi durumda yapılır?", o:["Burun kanamasında","Uzuv kopmasında","Baş ağrısında","Kırıklarda","Yanıklarda"], a:1}
-    ];
+        const rawQuestions = [
 
+/* ===================== HUKUK (30) ===================== */
+{c:"HUKUK",q:"5188 sayılı Kanuna göre özel güvenlik görevlisinin görev alanı neresi ile sınırlıdır?",o:["İl sınırları","Belediye sınırları","Türkiye geneli","Görevli olduğu alan","Valilik sınırı"],a:3},
+{c:"HUKUK",q:"Özel güvenlik görevlisi kimlik sorma yetkisini hangi durumda kullanabilir?",o:["Herkese","Şüpheli durumlarda","Evde","Keyfi","Sadece amirine"],a:1},
+{c:"HUKUK",q:"ÖGG aşağıdakilerden hangisini yapamaz?",o:["Yakalama","Zor kullanma","Emanete alma","İfade alma","Kimlik sorma"],a:3},
+{c:"HUKUK",q:"Özel güvenlik kimlik kartı kaç yılda bir yenilenir?",o:["2","3","4","5","Süresiz"],a:3},
+{c:"HUKUK",q:"Yakalanan kişi en geç ne zaman genel kolluğa teslim edilir?",o:["1 saat","Derhal","12 saat","24 saat","48 saat"],a:1},
+{c:"HUKUK",q:"Zor kullanmada temel ilke hangisidir?",o:["Keyfilik","Orantılılık","İntikam","Süreklilik","Ceza"],a:1},
+{c:"HUKUK",q:"ÖGG yetkilerini hangi kanundan alır?",o:["TCK","CMK","5188","2559","5442"],a:2},
+{c:"HUKUK",q:"Özel güvenlik görevlisi yetkilerini nerede kullanır?",o:["Her yerde","Görev alanında","İl genelinde","Sokakta","Evinde"],a:1},
+{c:"HUKUK",q:"ÖGG arama yapabilmesi için hangi şart gerekir?",o:["Keyfi","Hakim kararı","Şüphe","Talep","Emir"],a:2},
+{c:"HUKUK",q:"ÖGG kimlik kartını nerede taşır?",o:["Cebinde","Görev alanında görünür","Araçta","Kasada","Evde"],a:1},
+
+/* ===================== İLETİŞİM (15) ===================== */
+{c:"İLETİŞİM",q:"Empati kavramı neyi ifade eder?",o:["Acıma","Karşıdakini dinleme","Kendini onun yerine koyma","Öğüt verme","Yargılama"],a:2},
+{c:"İLETİŞİM",q:"Etkili iletişimin en önemli unsuru hangisidir?",o:["Ses tonu","Beden dili","Kıyafet","Statü","Mekan"],a:1},
+{c:"İLETİŞİM",q:"Öfke kontrolünde ilk yapılması gereken nedir?",o:["Bağırmak","Uzaklaşmak","Tehdit etmek","Saldırmak","Suçlamak"],a:1},
+{c:"İLETİŞİM",q:"İletişimde geri bildirim ne sağlar?",o:["Ceza","Anlaşılma","Kargaşa","Baskı","Üstünlük"],a:1},
+
+/* ===================== İLK YARDIM (25) ===================== */
+{c:"İLK YARDIM",q:"Bebeklerde bilinç kontrolü nasıl yapılır?",o:["Sarsarak","Topuklarına vurarak","Seslenerek","Su dökerek","Tokat atarak"],a:1},
+{c:"İLK YARDIM",q:"Solunumu olmayan yetişkinde ilk yapılacak işlem nedir?",o:["Kalp masajı","Suni solunum","Hava yolunu açmak","Turnike","Su içirmek"],a:2},
+{c:"İLK YARDIM",q:"Turnike hangi durumda uygulanır?",o:["Burun kanaması","Uzuv kopması","Yanık","Kırık","Bayılma"],a:1},
+{c:"İLK YARDIM",q:"Kalp masajı dakikada kaç kez yapılır?",o:["60","80","100-120","140","160"],a:2},
+{c:"İLK YARDIM",q:"Bilinç kapalı, solunumu olan kazazedeye ne yapılır?",o:["Sırtüstü yatırılır","Yan yatırılır","Ayağa kaldırılır","Su içirilir","Masaj yapılır"],a:1},
+
+/* ===================== SİLAH (20) ===================== */
+{c:"SİLAH",q:"Fişek yatağında fişek olduğunu gösteren sistem hangisidir?",o:["Şarjör emniyeti","Kabza emniyeti","İkaz pimi","Horoz","Gez"],a:2},
+{c:"SİLAH",q:"Tetiğe basıldığında horozu düşüren parça hangisidir?",o:["İğne","Namlu","Tetik manivelası","Arpacık","Gez"],a:2},
+{c:"SİLAH",q:"Silah taşırken en güvenli durum hangisidir?",o:["Dolu","Yarı dolu","Şarjör takılı fişek yatağı boş","Horoz kurulu","Emniyet kapalı"],a:2},
+
+/* ===================== YANGIN (10) ===================== */
+{c:"YANGIN",q:"Elektrik yangınlarında hangisi kullanılmaz?",o:["CO2","Kuru kimyevi toz","Su","Halokarbon","Köpük"],a:2},
+{c:"YANGIN",q:"Yangının oluşması için gerekli üç unsur hangisidir?",o:["Isı-Oksijen-Yakıt","Su-Duman-Isı","Alev-Hava","Basınç","Kömür"],a:0},
+
+/* ===================== GÜVENLİK & KORUMA (15) ===================== */
+{c:"GÜVENLİK",q:"Devriyenin temel amacı nedir?",o:["Ceza vermek","Caydırıcılık sağlamak","Kavga etmek","Kimlik toplamak","Şikayet almak"],a:1},
+{c:"KORUMA",q:"VIP korumada birinci öncelik hangisidir?",o:["Saldırganı yakalamak","Basınla konuşmak","Kişiyi tehlikeden uzaklaştırmak","Silah kullanmak","Yolu kapatmak"],a:2},
+{c:"KORUMA",q:"360 derece koruma neyi ifade eder?",o:["Ön koruma","Yan koruma","Arka koruma","Her yönden koruma","Araç koruması"],a:3}
+
+];
     // --- APP STATE ---
     let app = {
         questions: [],
